@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "tables": {
+    "customers": {
+      "raw_rows": 1,
+      "curated_rows": 1,
+      "rejected_rows": 0,
+      "reconciled": true,
+      "rejection_reason_counts": {}
+    },
+    "products": {
+      "raw_rows": 1,
+      "curated_rows": 1,
+      "rejected_rows": 0,
+      "reconciled": true,
+      "rejection_reason_counts": {}
+    },
+    "orders": {
+      "raw_rows": 1,
+      "curated_rows": 1,
+      "rejected_rows": 0,
+      "reconciled": true,
+      "rejection_reason_counts": {}
+    },
+    "payments": {
+      "raw_rows": 1,
+      "curated_rows": 1,
+      "rejected_rows": 0,
+      "reconciled": true,
+      "rejection_reason_counts": {}
+    }
+  }
+}

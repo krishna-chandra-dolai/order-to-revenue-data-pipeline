@@ -1,0 +1,14 @@
+{
+  "factory": "adf-order-revenue-26081401",
+  "resourceGroup": "rg-order-revenue-dev",
+  "reuseLinkedServices": [
+    "LS_AzurePostgreSQL_OrderRevenue",
+    "LS_ADLS_OrderRevenue"
+  ],
+  "deploymentOrder": [
+    "datasets",
+    "pipelines"
+  ],
+  "generatedBy": "scripts/deployment/build_adf_definitions.py",
+  "containsSecrets": false
+}

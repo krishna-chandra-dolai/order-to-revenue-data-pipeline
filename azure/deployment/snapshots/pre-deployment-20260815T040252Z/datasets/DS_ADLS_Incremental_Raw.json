@@ -1,0 +1,41 @@
+{
+  "etag": "550013d5-0000-2000-0000-6a7f62aa0000",
+  "id": "/subscriptions/699ac1b5-f0fd-40eb-b865-b4b22eaf3dec/resourceGroups/rg-order-revenue-dev/providers/Microsoft.DataFactory/factories/adf-order-revenue-26081401/datasets/DS_ADLS_Incremental_Raw",
+  "name": "DS_ADLS_Incremental_Raw",
+  "properties": {
+    "annotations": [],
+    "linkedServiceName": {
+      "referenceName": "LS_ADLS_OrderRevenue",
+      "type": "LinkedServiceReference"
+    },
+    "parameters": {
+      "tableName": {
+        "type": "String"
+      },
+      "watermarkPath": {
+        "type": "String"
+      }
+    },
+    "schema": [],
+    "type": "DelimitedText",
+    "typeProperties": {
+      "columnDelimiter": ",",
+      "escapeChar": "\\",
+      "firstRowAsHeader": true,
+      "location": {
+        "fileName": {
+          "type": "Expression",
+          "value": "@concat(dataset().tableName, '.csv')"
+        },
+        "fileSystem": "raw",
+        "folderPath": {
+          "type": "Expression",
+          "value": "@concat(dataset().tableName, '/incremental/', dataset().watermarkPath)"
+        },
+        "type": "AzureBlobFSLocation"
+      },
+      "quoteChar": "\""
+    }
+  },
+  "type": "Microsoft.DataFactory/factories/datasets"
+}

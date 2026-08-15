@@ -1,0 +1,62 @@
+{
+  "etag": "54007bc6-0000-2000-0000-6a7f42020000",
+  "id": "/subscriptions/699ac1b5-f0fd-40eb-b865-b4b22eaf3dec/resourceGroups/rg-order-revenue-dev/providers/Microsoft.DataFactory/factories/adf-order-revenue-26081401/datasets/DS_PG_Customers",
+  "name": "DS_PG_Customers",
+  "properties": {
+    "annotations": [],
+    "linkedServiceName": {
+      "referenceName": "LS_AzurePostgreSQL_OrderRevenue",
+      "type": "LinkedServiceReference"
+    },
+    "schema": [
+      {
+        "name": "customer_id",
+        "precision": 0,
+        "scale": 0,
+        "type": "bigint"
+      },
+      {
+        "name": "customer_name",
+        "precision": 0,
+        "scale": 0,
+        "type": "character varying"
+      },
+      {
+        "name": "email",
+        "precision": 0,
+        "scale": 0,
+        "type": "character varying"
+      },
+      {
+        "name": "city",
+        "precision": 0,
+        "scale": 0,
+        "type": "character varying"
+      },
+      {
+        "name": "state",
+        "precision": 0,
+        "scale": 0,
+        "type": "character varying"
+      },
+      {
+        "name": "created_at",
+        "precision": 0,
+        "scale": 0,
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "updated_at",
+        "precision": 0,
+        "scale": 0,
+        "type": "timestamp with time zone"
+      }
+    ],
+    "type": "AzurePostgreSqlTable",
+    "typeProperties": {
+      "schema": "public",
+      "table": "customers"
+    }
+  },
+  "type": "Microsoft.DataFactory/factories/datasets"
+}

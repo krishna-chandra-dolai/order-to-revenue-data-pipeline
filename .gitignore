@@ -1,0 +1,47 @@
+# Local credentials and environment overrides
+.env
+.env.*
+!.env.example
+*.pgpass
+pgpass.conf
+.azure/
+credentials.json
+*.pem
+*.key
+*.pfx
+*.p12
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Generated data can be reproduced with scripts/ingestion/generate_data.py
+data/generated/*
+!data/generated/.gitkeep
+
+# Database exports, logs, and temporary files
+*.dump
+*.bak
+*.sql.gz
+*.log
+*.tmp
+*.temp
+work/
+tmp/
+temp/
+
+# OS and editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

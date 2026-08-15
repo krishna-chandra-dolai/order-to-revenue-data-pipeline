@@ -1,0 +1,47 @@
+{
+  "capturedAtUtc": "20260814T184240Z",
+  "resourceGroup": "rg-order-revenue-dev",
+  "factory": "adf-order-revenue-26081401",
+  "pipelines": [
+    {
+      "name": "PL_Initial_Full_Load",
+      "propertiesSha256": "a05824c3eb5991eaa3c5b7857619e4b8c150e62ee9cff87f4a12e4520fcc845c"
+    }
+  ],
+  "datasets": [
+    {
+      "name": "DS_PG_Customers",
+      "propertiesSha256": "69e1e80cf3f3f6983312c257196ed7a259788ac5f6a858630434e0c06c0cb21e"
+    },
+    {
+      "name": "DS_ADLS_Customers_Raw",
+      "propertiesSha256": "928dbfb5fdcd023af66d8c585fce5c65aeee55011300ec5ab6eae64113a12fa0"
+    }
+  ],
+  "linkedServices": [
+    {
+      "name": "LS_ADLS_OrderRevenue",
+      "type": "AzureBlobFS",
+      "version": null,
+      "sslMode": null,
+      "safeTypePropertyNames": [
+        "url"
+      ]
+    },
+    {
+      "name": "LS_AzurePostgreSQL_OrderRevenue",
+      "type": "AzurePostgreSql",
+      "version": null,
+      "sslMode": 3,
+      "safeTypePropertyNames": [
+        "authenticationType",
+        "database",
+        "port",
+        "server",
+        "sslMode",
+        "username"
+      ]
+    }
+  ],
+  "secretValuesPersisted": false
+}

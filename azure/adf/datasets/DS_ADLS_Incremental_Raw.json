@@ -1,0 +1,38 @@
+{
+  "name": "DS_ADLS_Incremental_Raw",
+  "properties": {
+    "linkedServiceName": {
+      "referenceName": "LS_ADLS_OrderRevenue",
+      "type": "LinkedServiceReference"
+    },
+    "parameters": {
+      "tableName": {
+        "type": "String"
+      },
+      "watermarkPath": {
+        "type": "String"
+      }
+    },
+    "annotations": [],
+    "type": "DelimitedText",
+    "typeProperties": {
+      "location": {
+        "type": "AzureBlobFSLocation",
+        "fileName": {
+          "value": "@concat(dataset().tableName, '.csv')",
+          "type": "Expression"
+        },
+        "folderPath": {
+          "value": "@concat(dataset().tableName, '/incremental/', dataset().watermarkPath)",
+          "type": "Expression"
+        },
+        "fileSystem": "raw"
+      },
+      "columnDelimiter": ",",
+      "escapeChar": "\\",
+      "firstRowAsHeader": true,
+      "quoteChar": "\""
+    },
+    "schema": []
+  }
+}

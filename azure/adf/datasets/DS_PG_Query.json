@@ -1,0 +1,13 @@
+{
+  "name": "DS_PG_Query",
+  "properties": {
+    "linkedServiceName": {
+      "referenceName": "LS_AzurePostgreSQL_OrderRevenue",
+      "type": "LinkedServiceReference"
+    },
+    "annotations": [],
+    "type": "AzurePostgreSqlTable",
+    "schema": [],
+    "typeProperties": {}
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "mode": "VALIDATE_ONLY",
+  "validation": {
+    "status": "PASS",
+    "validatedAtUtc": "2026-08-15T04:08:08.835890+00:00",
+    "snapshot": "C:\\Users\\user\\OneDrive\\Desktop\\order-to-revenue-data-pipeline\\azure\\snapshots\\pre-deployment-20260815T040252Z",
+    "pipeline": "PL_Incremental_Load",
+    "functionalDifferenceCount": 4,
+    "onlyFunctionalAdfChange": true,
+    "approvedSinkPaths": [
+      {
+        "activity": "Copy_Customers_Incremental_To_Raw",
+        "live": "@concat('watermark=', formatDateTime(activity('Lookup_Customers_Window').output.firstRow.new_watermark, 'yyyyMMddTHHmmssfffffffZ'))",
+        "approved": "@concat('watermark=', formatDateTime(activity('Lookup_Customers_Window').output.firstRow.new_watermark, 'yyyyMMddTHHmmssfffffffZ'), '/run_id=', pipeline().RunId)"
+      },
+      {
+        "activity": "Copy_Products_Incremental_To_Raw",
+        "live": "@concat('watermark=', formatDateTime(activity('Lookup_Products_Window').output.firstRow.new_watermark, 'yyyyMMddTHHmmssfffffffZ'))",
+        "approved": "@concat('watermark=', formatDateTime(activity('Lookup_Products_Window').output.firstRow.new_watermark, 'yyyyMMddTHHmmssfffffffZ'), '/run_id=', pipeline().RunId)"
+      },
+      {
+        "activity": "Copy_Orders_Incremental_To_Raw",
+        "live": "@concat('watermark=', formatDateTime(activity('Lookup_Orders_Window').output.firstRow.new_watermark, 'yyyyMMddTHHmmssfffffffZ'))",
+        "approved": "@concat('watermark=', formatDateTime(activity('Lookup_Orders_Window').output.firstRow.new_watermark, 'yyyyMMddTHHmmssfffffffZ'), '/run_id=', pipeline().RunId)"
+      },
+      {
+        "activity": "Copy_Payments_Incremental_To_Raw",
+        "live": "@concat('watermark=', formatDateTime(activity('Lookup_Payments_Window').output.firstRow.new_watermark, 'yyyyMMddTHHmmssfffffffZ'))",
+        "approved": "@concat('watermark=', formatDateTime(activity('Lookup_Payments_Window').output.firstRow.new_watermark, 'yyyyMMddTHHmmssfffffffZ'), '/run_id=', pipeline().RunId)"
+      }
+    ],
+    "differences": [
+      {
+        "path": "/activities/5/outputs/0/parameters/watermarkPath/value",
+        "live": "@concat('watermark=', formatDateTime(activity('Lookup_Customers_Window').output.firstRow.new_watermark, 'yyyyMMddTHHmmssfffffffZ'))",
+        "local": "@concat('watermark=', formatDateTime(activity('Lookup_Customers_Window').output.firstRow.new_watermark, 'yyyyMMddTHHmmssfffffffZ'), '/run_id=', pipeline().RunId)",
+        "resource": "pipelines/PL_Incremental_Load.json"
+      },
+      {
+        "path": "/activities/6/outputs/0/parameters/watermarkPath/value",
+        "live": "@concat('watermark=', formatDateTime(activity('Lookup_Products_Window').output.firstRow.new_watermark, 'yyyyMMddTHHmmssfffffffZ'))",
+        "local": "@concat('watermark=', formatDateTime(activity('Lookup_Products_Window').output.firstRow.new_watermark, 'yyyyMMddTHHmmssfffffffZ'), '/run_id=', pipeline().RunId)",
+        "resource": "pipelines/PL_Incremental_Load.json"
+      },
+      {
+        "path": "/activities/7/outputs/0/parameters/watermarkPath/value",
+        "live": "@concat('watermark=', formatDateTime(activity('Lookup_Orders_Window').output.firstRow.new_watermark, 'yyyyMMddTHHmmssfffffffZ'))",
+        "local": "@concat('watermark=', formatDateTime(activity('Lookup_Orders_Window').output.firstRow.new_watermark, 'yyyyMMddTHHmmssfffffffZ'), '/run_id=', pipeline().RunId)",
+        "resource": "pipelines/PL_Incremental_Load.json"
+      },
+      {
+        "path": "/activities/8/outputs/0/parameters/watermarkPath/value",
+        "live": "@concat('watermark=', formatDateTime(activity('Lookup_Payments_Window').output.firstRow.new_watermark, 'yyyyMMddTHHmmssfffffffZ'))",
+        "local": "@concat('watermark=', formatDateTime(activity('Lookup_Payments_Window').output.firstRow.new_watermark, 'yyyyMMddTHHmmssfffffffZ'), '/run_id=', pipeline().RunId)",
+        "resource": "pipelines/PL_Incremental_Load.json"
+      }
+    ],
+    "publishScope": [
+      "pipeline:PL_Incremental_Load"
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "checkedAtUtc": "2026-08-14T19:25:26.2417297Z",
+  "storageAccount": "stordrevdata26081401",
+  "signedInPrincipal": "current Azure CLI user",
+  "directAssignments": {
+    "storageAccount": [
+      {
+        "role": "Storage Blob Data Reader",
+        "scope": "/subscriptions/699ac1b5-f0fd-40eb-b865-b4b22eaf3dec/resourceGroups/rg-order-revenue-dev/providers/Microsoft.Storage/storageAccounts/stordrevdata26081401"
+      }
+    ],
+    "rawContainer": [],
+    "curatedContainer": [],
+    "rejectedContainer": []
+  },
+  "effectiveRoleDefinitions": [
+    {
+      "role": "Owner",
+      "scope": "/subscriptions/699ac1b5-f0fd-40eb-b865-b4b22eaf3dec",
+      "dataActions": []
+    },
+    {
+      "role": "Storage Blob Data Reader",
+      "scope": "/subscriptions/699ac1b5-f0fd-40eb-b865-b4b22eaf3dec/resourceGroups/rg-order-revenue-dev/providers/Microsoft.Storage/storageAccounts/stordrevdata26081401",
+      "dataActions": [
+        "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/read"
+      ]
+    }
+  ],
+  "blobWriteDataActionGranted": false,
+  "temporaryBlobDataContributorAssignmentsPresent": false,
+  "blobDataOwnerAssignmentsPresent": false,
+  "readerPreserved": true,
+  "probeBlobsPresent": {
+    "curated/_rbac-verification/nonexistent.csv": false,
+    "rejected/_rbac-verification/nonexistent.csv": false
+  },
+  "notes": "Inherited subscription Owner is a pre-existing management-plane role and has no dataActions. Conditional PUT probes returned a precondition response, so they were not used as authorization evidence; impossible ETags prevented writes and both probe paths were confirmed absent. Final permission status is based on the complete effective RBAC role set and built-in role definitions."
+}

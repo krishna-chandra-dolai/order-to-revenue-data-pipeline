@@ -1,0 +1,49 @@
+{
+  "status": "PASS",
+  "authentication": "Azure RBAC",
+  "watermarkPath": "watermark=20260815T0325375273430Z",
+  "expectedRunId": "71f6b8db-482c-4827-ba29-377867bdecad",
+  "tables": {
+    "customers": {
+      "blob": "customers/incremental/watermark=20260815T0325375273430Z/customers.csv",
+      "bytes": 66,
+      "sha256": "734ef3915c28020f7dfdab5e006ab296dfe691cbecb4acfc04684eda7a57de40",
+      "dataRows": 0,
+      "primaryKeys": [],
+      "updatedAt": []
+    },
+    "products": {
+      "blob": "products/incremental/watermark=20260815T0325375273430Z/products.csv",
+      "bytes": 73,
+      "sha256": "ea9459bc7885f18f4294bd7ded94559c181f518b7e3e248d80cc6f1a0cfb3ed6",
+      "dataRows": 0,
+      "primaryKeys": [],
+      "updatedAt": []
+    },
+    "orders": {
+      "blob": "orders/incremental/watermark=20260815T0325375273430Z/orders.csv",
+      "bytes": 88,
+      "sha256": "92a52f1e1833f6580aab08576d37b0040d005544db89f49218c471b4731f2ef7",
+      "dataRows": 0,
+      "primaryKeys": [],
+      "updatedAt": []
+    },
+    "payments": {
+      "blob": "payments/incremental/watermark=20260815T0325375273430Z/payments.csv",
+      "bytes": 90,
+      "sha256": "f695085f0b9b23c05b2816708128946b6a30102a28f2d78034d4096a9edb5e39",
+      "dataRows": 0,
+      "primaryKeys": [],
+      "updatedAt": []
+    }
+  },
+  "currentWatermarks": {
+    "customers_watermark": "2026-08-15 03:25:37.527343+00",
+    "products_watermark": "2026-08-15 03:25:37.527343+00",
+    "orders_watermark": "2026-08-15 03:25:37.527343+00",
+    "payments_watermark": "2026-08-15 03:25:37.527343+00",
+    "last_successful_run_id": "71f6b8db-482c-4827-ba29-377867bdecad",
+    "completed_at": "2026-08-15 03:38:52.382756+00"
+  },
+  "failures": []
+}

@@ -1,0 +1,21 @@
+{
+  "name": "adf-order-revenue-26081401",
+  "location": "centralindia",
+  "identityType": "SystemAssigned",
+  "properties": {
+    "createTime": "2026-08-14T14:31:30.7644543Z",
+    "factoryStatistics": {
+      "factorySizeInGbUnits": 0,
+      "maxAllowedFactorySizeInGbUnits": 0,
+      "maxAllowedResourceCount": 0,
+      "totalResourceCount": 0
+    },
+    "provisioningState": "Succeeded",
+    "publicNetworkAccess": "Enabled",
+    "trustModeClaimForMi": {
+      "editable": true,
+      "value": "Disabled"
+    },
+    "version": "2018-06-01"
+  }
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "etag": "5400a33c-0000-2000-0000-6a7f2d450000",
+    "id": "/subscriptions/699ac1b5-f0fd-40eb-b865-b4b22eaf3dec/resourceGroups/rg-order-revenue-dev/providers/Microsoft.DataFactory/factories/adf-order-revenue-26081401/linkedservices/LS_ADLS_OrderRevenue",
+    "name": "LS_ADLS_OrderRevenue",
+    "properties": {
+      "annotations": [],
+      "type": "AzureBlobFS",
+      "typeProperties": {
+        "encryptedCredential": {
+          "redacted": true,
+          "originalType": "str"
+        },
+        "url": "https://stordrevdata26081401.dfs.core.windows.net/"
+      }
+    },
+    "type": "Microsoft.DataFactory/factories/linkedservices"
+  },
+  {
+    "etag": "54005f7c-0000-2000-0000-6a7f36b50000",
+    "id": "/subscriptions/699ac1b5-f0fd-40eb-b865-b4b22eaf3dec/resourceGroups/rg-order-revenue-dev/providers/Microsoft.DataFactory/factories/adf-order-revenue-26081401/linkedservices/LS_AzurePostgreSQL_OrderRevenue",
+    "name": "LS_AzurePostgreSQL_OrderRevenue",
+    "properties": {
+      "annotations": [],
+      "type": "AzurePostgreSql",
+      "typeProperties": {
+        "authenticationType": "Basic",
+        "database": "order_revenue_db",
+        "encryptedCredential": {
+          "redacted": true,
+          "originalType": "str"
+        },
+        "port": "5432",
+        "server": "pg-order-revenue-26081401.postgres.database.azure.com",
+        "sslMode": 3,
+        "username": "orderadmin"
+      },
+      "version": "2.0"
+    },
+    "type": "Microsoft.DataFactory/factories/linkedservices"
+  }
+]

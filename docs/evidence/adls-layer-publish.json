@@ -1,0 +1,90 @@
+{
+  "status": "PASS",
+  "temporaryAssignments": [
+    {
+      "role": "Storage Blob Data Contributor",
+      "scope": "/subscriptions/699ac1b5-f0fd-40eb-b865-b4b22eaf3dec/resourceGroups/rg-order-revenue-dev/providers/Microsoft.Storage/storageAccounts/stordrevdata26081401/blobServices/default/containers/curated",
+      "container": "curated"
+    },
+    {
+      "role": "Storage Blob Data Contributor",
+      "scope": "/subscriptions/699ac1b5-f0fd-40eb-b865-b4b22eaf3dec/resourceGroups/rg-order-revenue-dev/providers/Microsoft.Storage/storageAccounts/stordrevdata26081401/blobServices/default/containers/rejected",
+      "container": "rejected"
+    }
+  ],
+  "uploaded": [
+    {
+      "container": "curated",
+      "name": "customers/full/run_id=4d23b5f2-84d3-4a6f-955c-8132bd887cc9/customers.csv",
+      "bytes": 266365,
+      "sha256": "7dcce2039aa45af9221540e5d37f8ed59436f5fd06e5db46618c26248ba77677",
+      "dataRows": 2000,
+      "rejectedRowsWithoutReason": 0
+    },
+    {
+      "container": "rejected",
+      "name": "customers/full/run_id=4d23b5f2-84d3-4a6f-955c-8132bd887cc9/customers.csv",
+      "bytes": 83,
+      "sha256": "001d305485329d6a73b07aa1d05d7e511ecb53005f706fd3fcd9e39477d6d128",
+      "dataRows": 0,
+      "rejectedRowsWithoutReason": 0
+    },
+    {
+      "container": "curated",
+      "name": "products/full/run_id=4d23b5f2-84d3-4a6f-955c-8132bd887cc9/products.csv",
+      "bytes": 38408,
+      "sha256": "5d6c2959ff52b3e088d25d94516e4155930da952c303348a1b2c43b518a384d2",
+      "dataRows": 300,
+      "rejectedRowsWithoutReason": 0
+    },
+    {
+      "container": "rejected",
+      "name": "products/full/run_id=4d23b5f2-84d3-4a6f-955c-8132bd887cc9/products.csv",
+      "bytes": 90,
+      "sha256": "a14699cddd878a88ca05853911e22c4ab53d34d782d588a51d48e7d6f03da2ec",
+      "dataRows": 0,
+      "rejectedRowsWithoutReason": 0
+    },
+    {
+      "container": "curated",
+      "name": "orders/full/run_id=4d23b5f2-84d3-4a6f-955c-8132bd887cc9/orders.csv",
+      "bytes": 998106,
+      "sha256": "309b44dfdc8a5bbe74443cd97d5bb69dda8925c94cc6313f3a102e4bfe643426",
+      "dataRows": 9953,
+      "rejectedRowsWithoutReason": 0
+    },
+    {
+      "container": "rejected",
+      "name": "orders/full/run_id=4d23b5f2-84d3-4a6f-955c-8132bd887cc9/orders.csv",
+      "bytes": 5392,
+      "sha256": "8b1b241cb932130d36ace1f93d0aa9878f1adb634a8a5919cc8dfac722387499",
+      "dataRows": 47,
+      "rejectedRowsWithoutReason": 0
+    },
+    {
+      "container": "curated",
+      "name": "payments/full/run_id=4d23b5f2-84d3-4a6f-955c-8132bd887cc9/payments.csv",
+      "bytes": 1010755,
+      "sha256": "86e0555666021a0cef1c9c114be27300886a6d80b7c13d61962ec11e3a583cfc",
+      "dataRows": 9943,
+      "rejectedRowsWithoutReason": 0
+    },
+    {
+      "container": "rejected",
+      "name": "payments/full/run_id=4d23b5f2-84d3-4a6f-955c-8132bd887cc9/payments.csv",
+      "bytes": 5653,
+      "sha256": "61c92fc29882da6d4b90db8edf464bb484c7119221fa78402b6fffd6d494476a",
+      "dataRows": 47,
+      "rejectedRowsWithoutReason": 0
+    }
+  ],
+  "temporaryAssignmentsRemoved": true,
+  "finalRelevantRoles": [
+    {
+      "role": "Storage Blob Data Reader",
+      "scope": "/subscriptions/699ac1b5-f0fd-40eb-b865-b4b22eaf3dec/resourceGroups/rg-order-revenue-dev/providers/Microsoft.Storage/storageAccounts/stordrevdata26081401"
+    }
+  ],
+  "rawPermissionsChanged": false,
+  "storageKeysUsed": false
+}

@@ -1,0 +1,16 @@
+{
+  "etag": "5500d1d4-0000-2000-0000-6a7f62a80000",
+  "id": "/subscriptions/699ac1b5-f0fd-40eb-b865-b4b22eaf3dec/resourceGroups/rg-order-revenue-dev/providers/Microsoft.DataFactory/factories/adf-order-revenue-26081401/datasets/DS_PG_Query",
+  "name": "DS_PG_Query",
+  "properties": {
+    "annotations": [],
+    "linkedServiceName": {
+      "referenceName": "LS_AzurePostgreSQL_OrderRevenue",
+      "type": "LinkedServiceReference"
+    },
+    "schema": [],
+    "type": "AzurePostgreSqlTable",
+    "typeProperties": {}
+  },
+  "type": "Microsoft.DataFactory/factories/datasets"
+}

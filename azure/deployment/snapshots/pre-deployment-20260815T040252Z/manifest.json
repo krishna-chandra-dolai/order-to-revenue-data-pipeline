@@ -1,0 +1,87 @@
+{
+  "capturedAtUtc": "20260815T040252Z",
+  "resourceGroup": "rg-order-revenue-dev",
+  "factory": "adf-order-revenue-26081401",
+  "pipelines": [
+    {
+      "name": "PL_Initial_Full_Load",
+      "propertiesSha256": "d4741f2988e9d1fb61a40ded783ee4ebd901f89f0fbaa3239a9cf503460d4011"
+    },
+    {
+      "name": "PL_Incremental_Load",
+      "propertiesSha256": "9581e520d5527262ef8625846ff37df1342eb56c8710df4edf0c79948feb7fb8"
+    }
+  ],
+  "datasets": [
+    {
+      "name": "DS_PG_Customers",
+      "propertiesSha256": "69e1e80cf3f3f6983312c257196ed7a259788ac5f6a858630434e0c06c0cb21e"
+    },
+    {
+      "name": "DS_ADLS_Customers_Raw",
+      "propertiesSha256": "928dbfb5fdcd023af66d8c585fce5c65aeee55011300ec5ab6eae64113a12fa0"
+    },
+    {
+      "name": "DS_PG_Products",
+      "propertiesSha256": "265c952cc9090ff163684c004bd27aeba8f6a4f22b415821ede631f13e9a353e"
+    },
+    {
+      "name": "DS_PG_Orders",
+      "propertiesSha256": "1f17092f134be2a20b2b3fb104165dd0b6b15e90024f2f404473884282d5818b"
+    },
+    {
+      "name": "DS_PG_Payments",
+      "propertiesSha256": "0e355268c0a30edd5cac1d3f1e3fac73f865cffdc3b24cbdca43a4c24e117696"
+    },
+    {
+      "name": "DS_ADLS_Products_Raw",
+      "propertiesSha256": "c61454d7a06f9a7cd6339ec71c0f157f8414302d21ea2c890aa6af2efc55a05f"
+    },
+    {
+      "name": "DS_ADLS_Orders_Raw",
+      "propertiesSha256": "7d1ca78faf45b8323b0c434f59fab3ec0cf01293d87790576ffe58584b7ef29b"
+    },
+    {
+      "name": "DS_ADLS_Payments_Raw",
+      "propertiesSha256": "cd49cd7627697988a3d7dbb842d42defbfa40a87143ece50f4469daee180769b"
+    },
+    {
+      "name": "DS_PG_Query",
+      "propertiesSha256": "183253c8fd4348bf1f9cab2e7ae3675d97023f8c9b59d2976baa803bb09a3a04"
+    },
+    {
+      "name": "DS_ADLS_Incremental_Raw",
+      "propertiesSha256": "2946769e66b436fb2fa9bd39836537b83b87754b692a336cabaad6cad9357cd9"
+    },
+    {
+      "name": "DS_ADLS_Watermark_Control",
+      "propertiesSha256": "945cfef25c99d03dd66c95d2c19f873c5b041f44fd0b834d57e3e02db3531d30"
+    }
+  ],
+  "linkedServices": [
+    {
+      "name": "LS_ADLS_OrderRevenue",
+      "type": "AzureBlobFS",
+      "version": null,
+      "sslMode": null,
+      "safeTypePropertyNames": [
+        "url"
+      ]
+    },
+    {
+      "name": "LS_AzurePostgreSQL_OrderRevenue",
+      "type": "AzurePostgreSql",
+      "version": null,
+      "sslMode": 3,
+      "safeTypePropertyNames": [
+        "authenticationType",
+        "database",
+        "port",
+        "server",
+        "sslMode",
+        "username"
+      ]
+    }
+  ],
+  "secretValuesPersisted": false
+}

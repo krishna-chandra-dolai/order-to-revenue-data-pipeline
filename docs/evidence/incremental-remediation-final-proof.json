@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "firstRunId": "a9a497e5-ab71-4d74-a62a-38212063e860",
+  "secondRunId": "59b6f800-bba5-485a-9a1b-7ba608c4997a",
+  "firstCounts": {
+    "customers": 1,
+    "products": 1,
+    "orders": 1,
+    "payments": 1
+  },
+  "secondCounts": {
+    "customers": 0,
+    "products": 0,
+    "orders": 0,
+    "payments": 0
+  },
+  "runIdsUnique": true,
+  "firstRunFilesUnchanged": {
+    "customers": true,
+    "products": true,
+    "orders": true,
+    "payments": true
+  },
+  "secondRunFilesSeparate": {
+    "customers": true,
+    "products": true,
+    "orders": true,
+    "payments": true
+  },
+  "appendOnlyRetention": true,
+  "watermarkIdempotency": true,
+  "sourceIdempotency": true,
+  "finalSourceCounts": {
+    "customers": 2001,
+    "products": 301,
+    "orders": 10001,
+    "payments": 9991
+  },
+  "confirmedOrders": 8941,
+  "confirmedRevenue": 307416040.0,
+  "failures": []
+}

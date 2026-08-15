@@ -1,0 +1,820 @@
+{
+  "etag": "550074d5-0000-2000-0000-6a7f62b00000",
+  "id": "/subscriptions/699ac1b5-f0fd-40eb-b865-b4b22eaf3dec/resourceGroups/rg-order-revenue-dev/providers/Microsoft.DataFactory/factories/adf-order-revenue-26081401/pipelines/PL_Initial_Full_Load",
+  "name": "PL_Initial_Full_Load",
+  "properties": {
+    "activities": [
+      {
+        "dependsOn": [],
+        "inputs": [
+          {
+            "parameters": {},
+            "referenceName": "DS_PG_Customers",
+            "type": "DatasetReference"
+          }
+        ],
+        "name": "Copy_Customers_To_Raw",
+        "outputs": [
+          {
+            "parameters": {},
+            "referenceName": "DS_ADLS_Customers_Raw",
+            "type": "DatasetReference"
+          }
+        ],
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "0.12:00:00"
+        },
+        "type": "Copy",
+        "typeProperties": {
+          "enableStaging": false,
+          "sink": {
+            "formatSettings": {
+              "fileExtension": ".txt",
+              "quoteAllText": true,
+              "type": "DelimitedTextWriteSettings"
+            },
+            "storeSettings": {
+              "type": "AzureBlobFSWriteSettings"
+            },
+            "type": "DelimitedTextSink"
+          },
+          "source": {
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "type": "AzurePostgreSqlSource"
+          },
+          "translator": {
+            "mappings": [
+              {
+                "sink": {
+                  "name": "customer_id",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "customer_id",
+                  "physicalType": "bigint",
+                  "type": "Int64"
+                }
+              },
+              {
+                "sink": {
+                  "name": "customer_name",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "customer_name",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "email",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "email",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "city",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "city",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "state",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "state",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "created_at",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "created_at",
+                  "physicalType": "timestamp with time zone",
+                  "type": "DateTime"
+                }
+              },
+              {
+                "sink": {
+                  "name": "updated_at",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "updated_at",
+                  "physicalType": "timestamp with time zone",
+                  "type": "DateTime"
+                }
+              }
+            ],
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "dependsOn": [],
+        "inputs": [
+          {
+            "parameters": {},
+            "referenceName": "DS_PG_Products",
+            "type": "DatasetReference"
+          }
+        ],
+        "name": "Copy_Products_To_Raw",
+        "outputs": [
+          {
+            "parameters": {},
+            "referenceName": "DS_ADLS_Products_Raw",
+            "type": "DatasetReference"
+          }
+        ],
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "0.12:00:00"
+        },
+        "type": "Copy",
+        "typeProperties": {
+          "enableStaging": false,
+          "sink": {
+            "formatSettings": {
+              "fileExtension": ".txt",
+              "quoteAllText": true,
+              "type": "DelimitedTextWriteSettings"
+            },
+            "storeSettings": {
+              "type": "AzureBlobFSWriteSettings"
+            },
+            "type": "DelimitedTextSink"
+          },
+          "source": {
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "type": "AzurePostgreSqlSource"
+          },
+          "translator": {
+            "mappings": [
+              {
+                "sink": {
+                  "name": "product_id",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "product_id",
+                  "physicalType": "bigint",
+                  "type": "Int64"
+                }
+              },
+              {
+                "sink": {
+                  "name": "product_name",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "product_name",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "category",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "category",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "brand",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "brand",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "unit_price",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "unit_price",
+                  "physicalType": "numeric",
+                  "type": "Decimal"
+                }
+              },
+              {
+                "sink": {
+                  "name": "created_at",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "created_at",
+                  "physicalType": "timestamp with time zone",
+                  "type": "DateTime"
+                }
+              },
+              {
+                "sink": {
+                  "name": "updated_at",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "updated_at",
+                  "physicalType": "timestamp with time zone",
+                  "type": "DateTime"
+                }
+              }
+            ],
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "dependsOn": [],
+        "inputs": [
+          {
+            "parameters": {},
+            "referenceName": "DS_PG_Orders",
+            "type": "DatasetReference"
+          }
+        ],
+        "name": "Copy_Orders_To_Raw",
+        "outputs": [
+          {
+            "parameters": {},
+            "referenceName": "DS_ADLS_Orders_Raw",
+            "type": "DatasetReference"
+          }
+        ],
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "0.12:00:00"
+        },
+        "type": "Copy",
+        "typeProperties": {
+          "enableStaging": false,
+          "sink": {
+            "formatSettings": {
+              "fileExtension": ".txt",
+              "quoteAllText": true,
+              "type": "DelimitedTextWriteSettings"
+            },
+            "storeSettings": {
+              "type": "AzureBlobFSWriteSettings"
+            },
+            "type": "DelimitedTextSink"
+          },
+          "source": {
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "type": "AzurePostgreSqlSource"
+          },
+          "translator": {
+            "mappings": [
+              {
+                "sink": {
+                  "name": "order_id",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "order_id",
+                  "physicalType": "bigint",
+                  "type": "Int64"
+                }
+              },
+              {
+                "sink": {
+                  "name": "customer_id",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "customer_id",
+                  "physicalType": "bigint",
+                  "type": "Int64"
+                }
+              },
+              {
+                "sink": {
+                  "name": "product_id",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "product_id",
+                  "physicalType": "bigint",
+                  "type": "Int64"
+                }
+              },
+              {
+                "sink": {
+                  "name": "quantity",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "quantity",
+                  "physicalType": "integer",
+                  "type": "Int32"
+                }
+              },
+              {
+                "sink": {
+                  "name": "unit_price",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "unit_price",
+                  "physicalType": "numeric",
+                  "type": "Decimal"
+                }
+              },
+              {
+                "sink": {
+                  "name": "order_status",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "order_status",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "created_at",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "created_at",
+                  "physicalType": "timestamp with time zone",
+                  "type": "DateTime"
+                }
+              },
+              {
+                "sink": {
+                  "name": "updated_at",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "updated_at",
+                  "physicalType": "timestamp with time zone",
+                  "type": "DateTime"
+                }
+              }
+            ],
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "dependsOn": [],
+        "inputs": [
+          {
+            "parameters": {},
+            "referenceName": "DS_PG_Payments",
+            "type": "DatasetReference"
+          }
+        ],
+        "name": "Copy_Payments_To_Raw",
+        "outputs": [
+          {
+            "parameters": {},
+            "referenceName": "DS_ADLS_Payments_Raw",
+            "type": "DatasetReference"
+          }
+        ],
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "0.12:00:00"
+        },
+        "type": "Copy",
+        "typeProperties": {
+          "enableStaging": false,
+          "sink": {
+            "formatSettings": {
+              "fileExtension": ".txt",
+              "quoteAllText": true,
+              "type": "DelimitedTextWriteSettings"
+            },
+            "storeSettings": {
+              "type": "AzureBlobFSWriteSettings"
+            },
+            "type": "DelimitedTextSink"
+          },
+          "source": {
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "type": "AzurePostgreSqlSource"
+          },
+          "translator": {
+            "mappings": [
+              {
+                "sink": {
+                  "name": "payment_id",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "payment_id",
+                  "physicalType": "bigint",
+                  "type": "Int64"
+                }
+              },
+              {
+                "sink": {
+                  "name": "order_id",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "order_id",
+                  "physicalType": "bigint",
+                  "type": "Int64"
+                }
+              },
+              {
+                "sink": {
+                  "name": "payment_amount",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "payment_amount",
+                  "physicalType": "numeric",
+                  "type": "Decimal"
+                }
+              },
+              {
+                "sink": {
+                  "name": "payment_method",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "payment_method",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "payment_status",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "payment_status",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "payment_time",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "payment_time",
+                  "physicalType": "timestamp with time zone",
+                  "type": "DateTime"
+                }
+              },
+              {
+                "sink": {
+                  "name": "updated_at",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "updated_at",
+                  "physicalType": "timestamp with time zone",
+                  "type": "DateTime"
+                }
+              }
+            ],
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "dependsOn": [],
+        "name": "Lookup_Customers_Full_Count",
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "0.12:00:00"
+        },
+        "type": "Lookup",
+        "typeProperties": {
+          "dataset": {
+            "parameters": {},
+            "referenceName": "DS_PG_Query",
+            "type": "DatasetReference"
+          },
+          "firstRowOnly": true,
+          "source": {
+            "partitionOption": "None",
+            "query": "SELECT COUNT(*)::bigint AS source_rows FROM public.customers",
+            "queryTimeout": "00:10:00",
+            "type": "AzurePostgreSqlSource"
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "dependsOn": [],
+        "name": "Lookup_Products_Full_Count",
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "0.12:00:00"
+        },
+        "type": "Lookup",
+        "typeProperties": {
+          "dataset": {
+            "parameters": {},
+            "referenceName": "DS_PG_Query",
+            "type": "DatasetReference"
+          },
+          "firstRowOnly": true,
+          "source": {
+            "partitionOption": "None",
+            "query": "SELECT COUNT(*)::bigint AS source_rows FROM public.products",
+            "queryTimeout": "00:10:00",
+            "type": "AzurePostgreSqlSource"
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "dependsOn": [],
+        "name": "Lookup_Orders_Full_Count",
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "0.12:00:00"
+        },
+        "type": "Lookup",
+        "typeProperties": {
+          "dataset": {
+            "parameters": {},
+            "referenceName": "DS_PG_Query",
+            "type": "DatasetReference"
+          },
+          "firstRowOnly": true,
+          "source": {
+            "partitionOption": "None",
+            "query": "SELECT COUNT(*)::bigint AS source_rows FROM public.orders",
+            "queryTimeout": "00:10:00",
+            "type": "AzurePostgreSqlSource"
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "dependsOn": [],
+        "name": "Lookup_Payments_Full_Count",
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "0.12:00:00"
+        },
+        "type": "Lookup",
+        "typeProperties": {
+          "dataset": {
+            "parameters": {},
+            "referenceName": "DS_PG_Query",
+            "type": "DatasetReference"
+          },
+          "firstRowOnly": true,
+          "source": {
+            "partitionOption": "None",
+            "query": "SELECT COUNT(*)::bigint AS source_rows FROM public.payments",
+            "queryTimeout": "00:10:00",
+            "type": "AzurePostgreSqlSource"
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "dependsOn": [
+          {
+            "activity": "Copy_Customers_To_Raw",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Copy_Products_To_Raw",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Copy_Orders_To_Raw",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Copy_Payments_To_Raw",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Lookup_Customers_Full_Count",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Lookup_Products_Full_Count",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Lookup_Orders_Full_Count",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Lookup_Payments_Full_Count",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "Validate_Full_Counts_Then_Initialize_Watermarks",
+        "type": "IfCondition",
+        "typeProperties": {
+          "expression": {
+            "type": "Expression",
+            "value": "@and(and(and(equals(int(activity('Copy_Customers_To_Raw').output.rowsCopied), int(activity('Lookup_Customers_Full_Count').output.firstRow.source_rows)), equals(int(activity('Copy_Products_To_Raw').output.rowsCopied), int(activity('Lookup_Products_Full_Count').output.firstRow.source_rows))), equals(int(activity('Copy_Orders_To_Raw').output.rowsCopied), int(activity('Lookup_Orders_Full_Count').output.firstRow.source_rows))), equals(int(activity('Copy_Payments_To_Raw').output.rowsCopied), int(activity('Lookup_Payments_Full_Count').output.firstRow.source_rows)))"
+          },
+          "ifFalseActivities": [
+            {
+              "dependsOn": [],
+              "name": "Fail_Full_Load_Row_Count_Validation",
+              "type": "Fail",
+              "typeProperties": {
+                "errorCode": "FULL_LOAD_ROW_COUNT_MISMATCH",
+                "message": "One or more full-load source counts did not match Copy rowsCopied; initial watermarks were not written."
+              },
+              "userProperties": []
+            }
+          ],
+          "ifTrueActivities": [
+            {
+              "dependsOn": [],
+              "inputs": [
+                {
+                  "parameters": {},
+                  "referenceName": "DS_PG_Query",
+                  "type": "DatasetReference"
+                }
+              ],
+              "name": "Write_Initial_Watermarks",
+              "outputs": [
+                {
+                  "parameters": {
+                    "fileName": "watermarks.csv",
+                    "folderPath": "_control"
+                  },
+                  "referenceName": "DS_ADLS_Watermark_Control",
+                  "type": "DatasetReference"
+                }
+              ],
+              "policy": {
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false,
+                "timeout": "0.12:00:00"
+              },
+              "type": "Copy",
+              "typeProperties": {
+                "enableStaging": false,
+                "sink": {
+                  "formatSettings": {
+                    "fileExtension": ".csv",
+                    "quoteAllText": true,
+                    "type": "DelimitedTextWriteSettings"
+                  },
+                  "storeSettings": {
+                    "type": "AzureBlobFSWriteSettings"
+                  },
+                  "type": "DelimitedTextSink"
+                },
+                "source": {
+                  "partitionOption": "None",
+                  "query": {
+                    "type": "Expression",
+                    "value": "@concat('SELECT (SELECT MAX(updated_at)::text FROM public.customers) AS customers_watermark, (SELECT MAX(updated_at)::text FROM public.products) AS products_watermark, (SELECT MAX(updated_at)::text FROM public.orders) AS orders_watermark, (SELECT MAX(updated_at)::text FROM public.payments) AS payments_watermark, ''' , pipeline().RunId, '''::text AS last_successful_run_id, clock_timestamp()::text AS completed_at')"
+                  },
+                  "queryTimeout": "00:10:00",
+                  "type": "AzurePostgreSqlSource"
+                }
+              },
+              "userProperties": []
+            }
+          ]
+        },
+        "userProperties": []
+      }
+    ],
+    "annotations": [],
+    "lastPublishTime": "2026-08-14T18:47:12Z"
+  },
+  "type": "Microsoft.DataFactory/factories/pipelines"
+}

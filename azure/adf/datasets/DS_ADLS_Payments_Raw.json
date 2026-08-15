@@ -1,0 +1,24 @@
+{
+  "name": "DS_ADLS_Payments_Raw",
+  "properties": {
+    "linkedServiceName": {
+      "referenceName": "LS_ADLS_OrderRevenue",
+      "type": "LinkedServiceReference"
+    },
+    "annotations": [],
+    "type": "DelimitedText",
+    "typeProperties": {
+      "location": {
+        "type": "AzureBlobFSLocation",
+        "fileName": "payments.csv",
+        "folderPath": "payments",
+        "fileSystem": "raw"
+      },
+      "columnDelimiter": ",",
+      "escapeChar": "\\",
+      "firstRowAsHeader": true,
+      "quoteChar": "\""
+    },
+    "schema": []
+  }
+}

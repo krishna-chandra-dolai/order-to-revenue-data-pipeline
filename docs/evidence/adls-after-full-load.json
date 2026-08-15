@@ -1,0 +1,110 @@
+{
+  "storageAccount": "stordrevdata26081401",
+  "authentication": "Azure RBAC",
+  "containers": {
+    "raw": [
+      {
+        "name": "_control",
+        "contentLength": 0,
+        "lastModified": "2026-08-14T18:49:02+00:00"
+      },
+      {
+        "name": "_control/watermarks.csv",
+        "contentLength": 284,
+        "lastModified": "2026-08-14T18:49:02+00:00",
+        "header": [
+          "customers_watermark",
+          "products_watermark",
+          "orders_watermark",
+          "payments_watermark",
+          "last_successful_run_id",
+          "completed_at"
+        ],
+        "dataRows": 1
+      },
+      {
+        "name": "customers",
+        "contentLength": 0,
+        "lastModified": "2026-08-14T15:55:28+00:00"
+      },
+      {
+        "name": "customers/customers.csv",
+        "contentLength": 262365,
+        "lastModified": "2026-08-14T18:48:41+00:00",
+        "header": [
+          "customer_id",
+          "customer_name",
+          "email",
+          "city",
+          "state",
+          "created_at",
+          "updated_at"
+        ],
+        "dataRows": 2000
+      },
+      {
+        "name": "orders",
+        "contentLength": 0,
+        "lastModified": "2026-08-14T18:48:42+00:00"
+      },
+      {
+        "name": "orders/orders.csv",
+        "contentLength": 922769,
+        "lastModified": "2026-08-14T18:48:42+00:00",
+        "header": [
+          "order_id",
+          "customer_id",
+          "product_id",
+          "quantity",
+          "unit_price",
+          "order_status",
+          "created_at",
+          "updated_at"
+        ],
+        "dataRows": 10000
+      },
+      {
+        "name": "payments",
+        "contentLength": 0,
+        "lastModified": "2026-08-14T18:48:43+00:00"
+      },
+      {
+        "name": "payments/payments.csv",
+        "contentLength": 955625,
+        "lastModified": "2026-08-14T18:48:43+00:00",
+        "header": [
+          "payment_id",
+          "order_id",
+          "payment_amount",
+          "payment_method",
+          "payment_status",
+          "payment_time",
+          "updated_at"
+        ],
+        "dataRows": 9990
+      },
+      {
+        "name": "products",
+        "contentLength": 0,
+        "lastModified": "2026-08-14T18:48:43+00:00"
+      },
+      {
+        "name": "products/products.csv",
+        "contentLength": 37208,
+        "lastModified": "2026-08-14T18:48:43+00:00",
+        "header": [
+          "product_id",
+          "product_name",
+          "category",
+          "brand",
+          "unit_price",
+          "created_at",
+          "updated_at"
+        ],
+        "dataRows": 300
+      }
+    ],
+    "curated": [],
+    "rejected": []
+  }
+}

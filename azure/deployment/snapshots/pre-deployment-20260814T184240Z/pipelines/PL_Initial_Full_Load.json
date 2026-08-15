@@ -1,0 +1,155 @@
+{
+  "etag": "540086c6-0000-2000-0000-6a7f42020000",
+  "id": "/subscriptions/699ac1b5-f0fd-40eb-b865-b4b22eaf3dec/resourceGroups/rg-order-revenue-dev/providers/Microsoft.DataFactory/factories/adf-order-revenue-26081401/pipelines/PL_Initial_Full_Load",
+  "name": "PL_Initial_Full_Load",
+  "properties": {
+    "activities": [
+      {
+        "dependsOn": [],
+        "inputs": [
+          {
+            "parameters": {},
+            "referenceName": "DS_PG_Customers",
+            "type": "DatasetReference"
+          }
+        ],
+        "name": "Copy_Customers_To_Raw",
+        "outputs": [
+          {
+            "parameters": {},
+            "referenceName": "DS_ADLS_Customers_Raw",
+            "type": "DatasetReference"
+          }
+        ],
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "0.12:00:00"
+        },
+        "type": "Copy",
+        "typeProperties": {
+          "enableStaging": false,
+          "sink": {
+            "formatSettings": {
+              "fileExtension": ".txt",
+              "quoteAllText": true,
+              "type": "DelimitedTextWriteSettings"
+            },
+            "storeSettings": {
+              "type": "AzureBlobFSWriteSettings"
+            },
+            "type": "DelimitedTextSink"
+          },
+          "source": {
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "type": "AzurePostgreSqlSource"
+          },
+          "translator": {
+            "mappings": [
+              {
+                "sink": {
+                  "name": "customer_id",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "customer_id",
+                  "physicalType": "bigint",
+                  "type": "Int64"
+                }
+              },
+              {
+                "sink": {
+                  "name": "customer_name",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "customer_name",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "email",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "email",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "city",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "city",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "state",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "state",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "created_at",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "created_at",
+                  "physicalType": "timestamp with time zone",
+                  "type": "DateTime"
+                }
+              },
+              {
+                "sink": {
+                  "name": "updated_at",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "updated_at",
+                  "physicalType": "timestamp with time zone",
+                  "type": "DateTime"
+                }
+              }
+            ],
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        },
+        "userProperties": []
+      }
+    ],
+    "annotations": [],
+    "lastPublishTime": "2026-08-14T16:27:46Z",
+    "policy": {
+      "elapsedTimeMetric": {}
+    }
+  },
+  "type": "Microsoft.DataFactory/factories/pipelines"
+}

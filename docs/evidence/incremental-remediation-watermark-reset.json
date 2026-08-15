@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "target": "raw/_control/watermarks.csv",
+  "currentStateSavedAs": "docs/evidence/pre-remediation-watermark-state.json",
+  "preTestStateEvidence": "docs/evidence/incremental-nonzero-run.json",
+  "recoveryWindowEvidence": "docs/evidence/pre-remediation-recovery-window-check.json",
+  "safeToReset": true,
+  "unexpectedSourceIds": {
+    "customers": [],
+    "products": [],
+    "orders": [],
+    "payments": []
+  },
+  "restoredControlSha256": "ec60cc2631a666ca243b03acb86c312afb36f82e1481498f3d5c4ae616d9900c",
+  "readbackSha256": "ec60cc2631a666ca243b03acb86c312afb36f82e1481498f3d5c4ae616d9900c",
+  "readbackMatched": true,
+  "temporaryRole": {
+    "role": "Storage Blob Data Contributor",
+    "scope": "raw container only",
+    "assignmentId": "2c240c65-f48c-4bfb-a6d3-2aa03766699b",
+    "createdAtUtc": "2026-08-15T04:09:46.663581+00:00",
+    "removedAfterVerifiedReset": true
+  },
+  "finalDataPlaneRole": "Storage Blob Data Reader at storage-account scope",
+  "storageKeysUsed": false,
+  "linkedServicesChanged": false
+}

@@ -1,0 +1,85 @@
+{
+    "tables": {
+        "orders": {
+            "total_rows": 10001,
+            "expected_rows": 1,
+            "recovery_rows": 1,
+            "max_updated_at": "2026-08-15T03:25:37.527343+00:00",
+            "unexpected_ids": [
+            ]
+        },
+        "payments": {
+            "total_rows": 9991,
+            "expected_rows": 1,
+            "recovery_rows": 1,
+            "max_updated_at": "2026-08-15T03:25:37.527343+00:00",
+            "unexpected_ids": [
+            ]
+        },
+        "products": {
+            "total_rows": 301,
+            "expected_rows": 1,
+            "recovery_rows": 1,
+            "max_updated_at": "2026-08-15T03:25:37.527343+00:00",
+            "unexpected_ids": [
+            ]
+        },
+        "customers": {
+            "total_rows": 2001,
+            "expected_rows": 1,
+            "recovery_rows": 1,
+            "max_updated_at": "2026-08-15T03:25:37.527343+00:00",
+            "unexpected_ids": [
+            ]
+        }
+    },
+    "checked_at": "2026-08-15T04:06:15.848133+00:00",
+    "safe_to_reset": true,
+    "synthetic_rows": {
+        "order": {
+            "order_id": 10001,
+            "quantity": 1,
+            "created_at": "2026-08-15T03:25:37.527343+00:00",
+            "product_id": 301,
+            "unit_price": 1.00,
+            "updated_at": "2026-08-15T03:25:37.527343+00:00",
+            "customer_id": 2001,
+            "order_status": "pending"
+        },
+        "payment": {
+            "order_id": 10001,
+            "payment_id": 9991,
+            "updated_at": "2026-08-15T03:25:37.527343+00:00",
+            "payment_time": "2026-08-15T03:25:37.527343+00:00",
+            "payment_amount": 1.00,
+            "payment_method": "UPI",
+            "payment_status": "pending"
+        },
+        "product": {
+            "brand": "Test Brand",
+            "category": "Test Category",
+            "created_at": "2026-08-15T03:25:37.527343+00:00",
+            "product_id": 301,
+            "unit_price": 1.00,
+            "updated_at": "2026-08-15T03:25:37.527343+00:00",
+            "product_name": "Incremental Test Product"
+        },
+        "customer": {
+            "city": "Test City",
+            "email": "incremental.test.2001@example.invalid",
+            "state": "Test State",
+            "created_at": "2026-08-15T03:25:37.527343+00:00",
+            "updated_at": "2026-08-15T03:25:37.527343+00:00",
+            "customer_id": 2001,
+            "customer_name": "Incremental Test Customer"
+        }
+    },
+    "confirmed_orders": 8941,
+    "confirmed_revenue": 307416040.00,
+    "documented_pre_test_watermarks": {
+        "orders": "2025-07-03T06:58:08+00:00",
+        "payments": "2025-07-09T12:40:20+00:00",
+        "products": "2023-05-29T00:00:00+00:00",
+        "customers": "2024-03-28T04:31:20+00:00"
+    }
+}

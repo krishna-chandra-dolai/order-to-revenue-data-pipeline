@@ -1,0 +1,59 @@
+{
+  "name": "DS_PG_Payments",
+  "properties": {
+    "linkedServiceName": {
+      "referenceName": "LS_AzurePostgreSQL_OrderRevenue",
+      "type": "LinkedServiceReference"
+    },
+    "annotations": [],
+    "type": "AzurePostgreSqlTable",
+    "schema": [
+      {
+        "name": "payment_id",
+        "type": "bigint",
+        "precision": 0,
+        "scale": 0
+      },
+      {
+        "name": "order_id",
+        "type": "bigint",
+        "precision": 0,
+        "scale": 0
+      },
+      {
+        "name": "payment_amount",
+        "type": "numeric",
+        "precision": 12,
+        "scale": 2
+      },
+      {
+        "name": "payment_method",
+        "type": "character varying",
+        "precision": 0,
+        "scale": 0
+      },
+      {
+        "name": "payment_status",
+        "type": "character varying",
+        "precision": 0,
+        "scale": 0
+      },
+      {
+        "name": "payment_time",
+        "type": "timestamp with time zone",
+        "precision": 0,
+        "scale": 0
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "precision": 0,
+        "scale": 0
+      }
+    ],
+    "typeProperties": {
+      "schema": "public",
+      "table": "payments"
+    }
+  }
+}

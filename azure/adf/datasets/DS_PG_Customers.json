@@ -1,0 +1,59 @@
+{
+  "name": "DS_PG_Customers",
+  "properties": {
+    "linkedServiceName": {
+      "referenceName": "LS_AzurePostgreSQL_OrderRevenue",
+      "type": "LinkedServiceReference"
+    },
+    "annotations": [],
+    "type": "AzurePostgreSqlTable",
+    "schema": [
+      {
+        "name": "customer_id",
+        "type": "bigint",
+        "precision": 0,
+        "scale": 0
+      },
+      {
+        "name": "customer_name",
+        "type": "character varying",
+        "precision": 0,
+        "scale": 0
+      },
+      {
+        "name": "email",
+        "type": "character varying",
+        "precision": 0,
+        "scale": 0
+      },
+      {
+        "name": "city",
+        "type": "character varying",
+        "precision": 0,
+        "scale": 0
+      },
+      {
+        "name": "state",
+        "type": "character varying",
+        "precision": 0,
+        "scale": 0
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "precision": 0,
+        "scale": 0
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "precision": 0,
+        "scale": 0
+      }
+    ],
+    "typeProperties": {
+      "schema": "public",
+      "table": "customers"
+    }
+  }
+}

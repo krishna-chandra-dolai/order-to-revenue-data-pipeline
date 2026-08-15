@@ -1,0 +1,68 @@
+{
+  "etag": "550042d5-0000-2000-0000-6a7f62ad0000",
+  "id": "/subscriptions/699ac1b5-f0fd-40eb-b865-b4b22eaf3dec/resourceGroups/rg-order-revenue-dev/providers/Microsoft.DataFactory/factories/adf-order-revenue-26081401/datasets/DS_ADLS_Watermark_Control",
+  "name": "DS_ADLS_Watermark_Control",
+  "properties": {
+    "annotations": [],
+    "linkedServiceName": {
+      "referenceName": "LS_ADLS_OrderRevenue",
+      "type": "LinkedServiceReference"
+    },
+    "parameters": {
+      "fileName": {
+        "defaultValue": "watermarks.csv",
+        "type": "String"
+      },
+      "folderPath": {
+        "defaultValue": "_control",
+        "type": "String"
+      }
+    },
+    "schema": [
+      {
+        "name": "customers_watermark",
+        "type": "String"
+      },
+      {
+        "name": "products_watermark",
+        "type": "String"
+      },
+      {
+        "name": "orders_watermark",
+        "type": "String"
+      },
+      {
+        "name": "payments_watermark",
+        "type": "String"
+      },
+      {
+        "name": "last_successful_run_id",
+        "type": "String"
+      },
+      {
+        "name": "completed_at",
+        "type": "String"
+      }
+    ],
+    "type": "DelimitedText",
+    "typeProperties": {
+      "columnDelimiter": ",",
+      "escapeChar": "\\",
+      "firstRowAsHeader": true,
+      "location": {
+        "fileName": {
+          "type": "Expression",
+          "value": "@dataset().fileName"
+        },
+        "fileSystem": "raw",
+        "folderPath": {
+          "type": "Expression",
+          "value": "@dataset().folderPath"
+        },
+        "type": "AzureBlobFSLocation"
+      },
+      "quoteChar": "\""
+    }
+  },
+  "type": "Microsoft.DataFactory/factories/datasets"
+}

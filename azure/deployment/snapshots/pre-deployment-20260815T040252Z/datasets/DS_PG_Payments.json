@@ -1,0 +1,62 @@
+{
+  "etag": "550047d4-0000-2000-0000-6a7f629b0000",
+  "id": "/subscriptions/699ac1b5-f0fd-40eb-b865-b4b22eaf3dec/resourceGroups/rg-order-revenue-dev/providers/Microsoft.DataFactory/factories/adf-order-revenue-26081401/datasets/DS_PG_Payments",
+  "name": "DS_PG_Payments",
+  "properties": {
+    "annotations": [],
+    "linkedServiceName": {
+      "referenceName": "LS_AzurePostgreSQL_OrderRevenue",
+      "type": "LinkedServiceReference"
+    },
+    "schema": [
+      {
+        "name": "payment_id",
+        "precision": 0,
+        "scale": 0,
+        "type": "bigint"
+      },
+      {
+        "name": "order_id",
+        "precision": 0,
+        "scale": 0,
+        "type": "bigint"
+      },
+      {
+        "name": "payment_amount",
+        "precision": 12,
+        "scale": 2,
+        "type": "numeric"
+      },
+      {
+        "name": "payment_method",
+        "precision": 0,
+        "scale": 0,
+        "type": "character varying"
+      },
+      {
+        "name": "payment_status",
+        "precision": 0,
+        "scale": 0,
+        "type": "character varying"
+      },
+      {
+        "name": "payment_time",
+        "precision": 0,
+        "scale": 0,
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "updated_at",
+        "precision": 0,
+        "scale": 0,
+        "type": "timestamp with time zone"
+      }
+    ],
+    "type": "AzurePostgreSqlTable",
+    "typeProperties": {
+      "schema": "public",
+      "table": "payments"
+    }
+  },
+  "type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,102 @@
+{
+  "status": "PASS",
+  "source": "actual ADLS full-load raw CSVs",
+  "downloads": {
+    "customers": {
+      "bytes": 262365,
+      "source": "raw/customers/customers.csv"
+    },
+    "products": {
+      "bytes": 37208,
+      "source": "raw/products/products.csv"
+    },
+    "orders": {
+      "bytes": 922769,
+      "source": "raw/orders/orders.csv"
+    },
+    "payments": {
+      "bytes": 955625,
+      "source": "raw/payments/payments.csv"
+    }
+  },
+  "processing": {
+    "status": "PASS",
+    "tables": {
+      "customers": {
+        "raw_rows": 2000,
+        "curated_rows": 2000,
+        "rejected_rows": 0,
+        "reconciled": true,
+        "rejection_reason_counts": {}
+      },
+      "products": {
+        "raw_rows": 300,
+        "curated_rows": 300,
+        "rejected_rows": 0,
+        "reconciled": true,
+        "rejection_reason_counts": {}
+      },
+      "orders": {
+        "raw_rows": 10000,
+        "curated_rows": 9953,
+        "rejected_rows": 47,
+        "reconciled": true,
+        "rejection_reason_counts": {
+          "INVALID_QUANTITY": 12,
+          "MISSING_CUSTOMER_REFERENCE": 10,
+          "MISSING_PRODUCT_REFERENCE": 10,
+          "PAYMENT_AMOUNT_MISMATCH": 15
+        }
+      },
+      "payments": {
+        "raw_rows": 9990,
+        "curated_rows": 9943,
+        "rejected_rows": 47,
+        "reconciled": true,
+        "rejection_reason_counts": {
+          "ORDER_NOT_CURATED": 47,
+          "PAYMENT_AMOUNT_MISMATCH": 15
+        }
+      }
+    }
+  },
+  "verification": {
+    "status": "PASS",
+    "tables": {
+      "customers": {
+        "raw_rows": 2000,
+        "curated_rows": 2000,
+        "rejected_rows": 0,
+        "reconciled": true,
+        "duplicate_curated_primary_keys": 0,
+        "rejected_rows_without_reason": 0
+      },
+      "products": {
+        "raw_rows": 300,
+        "curated_rows": 300,
+        "rejected_rows": 0,
+        "reconciled": true,
+        "duplicate_curated_primary_keys": 0,
+        "rejected_rows_without_reason": 0
+      },
+      "orders": {
+        "raw_rows": 10000,
+        "curated_rows": 9953,
+        "rejected_rows": 47,
+        "reconciled": true,
+        "duplicate_curated_primary_keys": 0,
+        "rejected_rows_without_reason": 0
+      },
+      "payments": {
+        "raw_rows": 9990,
+        "curated_rows": 9943,
+        "rejected_rows": 47,
+        "reconciled": true,
+        "duplicate_curated_primary_keys": 0,
+        "rejected_rows_without_reason": 0
+      }
+    },
+    "failures": []
+  },
+  "localWorkDirectory": "C:\\Users\\user\\OneDrive\\Desktop\\order-to-revenue-data-pipeline\\work\\final-remediation-real-adls"
+}

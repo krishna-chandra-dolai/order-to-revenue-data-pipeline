@@ -1,0 +1,1002 @@
+{
+  "etag": "550090d5-0000-2000-0000-6a7f62b20000",
+  "id": "/subscriptions/699ac1b5-f0fd-40eb-b865-b4b22eaf3dec/resourceGroups/rg-order-revenue-dev/providers/Microsoft.DataFactory/factories/adf-order-revenue-26081401/pipelines/PL_Incremental_Load",
+  "name": "PL_Incremental_Load",
+  "properties": {
+    "activities": [
+      {
+        "dependsOn": [],
+        "name": "Lookup_Current_Watermarks",
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "0.12:00:00"
+        },
+        "type": "Lookup",
+        "typeProperties": {
+          "dataset": {
+            "parameters": {
+              "fileName": "watermarks.csv",
+              "folderPath": "_control"
+            },
+            "referenceName": "DS_ADLS_Watermark_Control",
+            "type": "DatasetReference"
+          },
+          "firstRowOnly": true,
+          "source": {
+            "formatSettings": {
+              "type": "DelimitedTextReadSettings"
+            },
+            "storeSettings": {
+              "enablePartitionDiscovery": false,
+              "recursive": false,
+              "type": "AzureBlobFSReadSettings"
+            },
+            "type": "DelimitedTextSource"
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "dependsOn": [
+          {
+            "activity": "Lookup_Current_Watermarks",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "Lookup_Customers_Window",
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "0.12:00:00"
+        },
+        "type": "Lookup",
+        "typeProperties": {
+          "dataset": {
+            "parameters": {},
+            "referenceName": "DS_PG_Query",
+            "type": "DatasetReference"
+          },
+          "firstRowOnly": true,
+          "source": {
+            "partitionOption": "None",
+            "query": {
+              "type": "Expression",
+              "value": "@concat('WITH boundary AS (SELECT COALESCE(MAX(updated_at), TIMESTAMPTZ ''' , activity('Lookup_Current_Watermarks').output.firstRow.customers_watermark, ''' ) AS new_watermark FROM public.customers) SELECT boundary.new_watermark::text AS new_watermark, COUNT(t.customer_id)::bigint AS expected_rows FROM boundary LEFT JOIN public.customers t ON t.updated_at > TIMESTAMPTZ ''' , activity('Lookup_Current_Watermarks').output.firstRow.customers_watermark, ''' AND t.updated_at <= boundary.new_watermark GROUP BY boundary.new_watermark')"
+            },
+            "queryTimeout": "00:10:00",
+            "type": "AzurePostgreSqlSource"
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "dependsOn": [
+          {
+            "activity": "Lookup_Current_Watermarks",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "Lookup_Products_Window",
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "0.12:00:00"
+        },
+        "type": "Lookup",
+        "typeProperties": {
+          "dataset": {
+            "parameters": {},
+            "referenceName": "DS_PG_Query",
+            "type": "DatasetReference"
+          },
+          "firstRowOnly": true,
+          "source": {
+            "partitionOption": "None",
+            "query": {
+              "type": "Expression",
+              "value": "@concat('WITH boundary AS (SELECT COALESCE(MAX(updated_at), TIMESTAMPTZ ''' , activity('Lookup_Current_Watermarks').output.firstRow.products_watermark, ''' ) AS new_watermark FROM public.products) SELECT boundary.new_watermark::text AS new_watermark, COUNT(t.product_id)::bigint AS expected_rows FROM boundary LEFT JOIN public.products t ON t.updated_at > TIMESTAMPTZ ''' , activity('Lookup_Current_Watermarks').output.firstRow.products_watermark, ''' AND t.updated_at <= boundary.new_watermark GROUP BY boundary.new_watermark')"
+            },
+            "queryTimeout": "00:10:00",
+            "type": "AzurePostgreSqlSource"
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "dependsOn": [
+          {
+            "activity": "Lookup_Current_Watermarks",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "Lookup_Orders_Window",
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "0.12:00:00"
+        },
+        "type": "Lookup",
+        "typeProperties": {
+          "dataset": {
+            "parameters": {},
+            "referenceName": "DS_PG_Query",
+            "type": "DatasetReference"
+          },
+          "firstRowOnly": true,
+          "source": {
+            "partitionOption": "None",
+            "query": {
+              "type": "Expression",
+              "value": "@concat('WITH boundary AS (SELECT COALESCE(MAX(updated_at), TIMESTAMPTZ ''' , activity('Lookup_Current_Watermarks').output.firstRow.orders_watermark, ''' ) AS new_watermark FROM public.orders) SELECT boundary.new_watermark::text AS new_watermark, COUNT(t.order_id)::bigint AS expected_rows FROM boundary LEFT JOIN public.orders t ON t.updated_at > TIMESTAMPTZ ''' , activity('Lookup_Current_Watermarks').output.firstRow.orders_watermark, ''' AND t.updated_at <= boundary.new_watermark GROUP BY boundary.new_watermark')"
+            },
+            "queryTimeout": "00:10:00",
+            "type": "AzurePostgreSqlSource"
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "dependsOn": [
+          {
+            "activity": "Lookup_Current_Watermarks",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "Lookup_Payments_Window",
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "0.12:00:00"
+        },
+        "type": "Lookup",
+        "typeProperties": {
+          "dataset": {
+            "parameters": {},
+            "referenceName": "DS_PG_Query",
+            "type": "DatasetReference"
+          },
+          "firstRowOnly": true,
+          "source": {
+            "partitionOption": "None",
+            "query": {
+              "type": "Expression",
+              "value": "@concat('WITH boundary AS (SELECT COALESCE(MAX(updated_at), TIMESTAMPTZ ''' , activity('Lookup_Current_Watermarks').output.firstRow.payments_watermark, ''' ) AS new_watermark FROM public.payments) SELECT boundary.new_watermark::text AS new_watermark, COUNT(t.payment_id)::bigint AS expected_rows FROM boundary LEFT JOIN public.payments t ON t.updated_at > TIMESTAMPTZ ''' , activity('Lookup_Current_Watermarks').output.firstRow.payments_watermark, ''' AND t.updated_at <= boundary.new_watermark GROUP BY boundary.new_watermark')"
+            },
+            "queryTimeout": "00:10:00",
+            "type": "AzurePostgreSqlSource"
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "dependsOn": [
+          {
+            "activity": "Lookup_Customers_Window",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "inputs": [
+          {
+            "parameters": {},
+            "referenceName": "DS_PG_Query",
+            "type": "DatasetReference"
+          }
+        ],
+        "name": "Copy_Customers_Incremental_To_Raw",
+        "outputs": [
+          {
+            "parameters": {
+              "tableName": "customers",
+              "watermarkPath": {
+                "type": "Expression",
+                "value": "@concat('watermark=', formatDateTime(activity('Lookup_Customers_Window').output.firstRow.new_watermark, 'yyyyMMddTHHmmssfffffffZ'))"
+              }
+            },
+            "referenceName": "DS_ADLS_Incremental_Raw",
+            "type": "DatasetReference"
+          }
+        ],
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "0.12:00:00"
+        },
+        "type": "Copy",
+        "typeProperties": {
+          "enableStaging": false,
+          "sink": {
+            "formatSettings": {
+              "fileExtension": ".csv",
+              "quoteAllText": true,
+              "type": "DelimitedTextWriteSettings"
+            },
+            "storeSettings": {
+              "type": "AzureBlobFSWriteSettings"
+            },
+            "type": "DelimitedTextSink"
+          },
+          "source": {
+            "partitionOption": "None",
+            "query": {
+              "type": "Expression",
+              "value": "@concat('SELECT customer_id, customer_name, email, city, state, created_at, updated_at FROM public.customers WHERE updated_at > TIMESTAMPTZ ''' , activity('Lookup_Current_Watermarks').output.firstRow.customers_watermark, ''' AND updated_at <= TIMESTAMPTZ ''' , activity('Lookup_Customers_Window').output.firstRow.new_watermark, ''' ORDER BY updated_at, customer_id')"
+            },
+            "queryTimeout": "02:00:00",
+            "type": "AzurePostgreSqlSource"
+          },
+          "translator": {
+            "mappings": [
+              {
+                "sink": {
+                  "name": "customer_id",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "customer_id",
+                  "physicalType": "bigint",
+                  "type": "Int64"
+                }
+              },
+              {
+                "sink": {
+                  "name": "customer_name",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "customer_name",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "email",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "email",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "city",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "city",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "state",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "state",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "created_at",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "created_at",
+                  "physicalType": "timestamp with time zone",
+                  "type": "DateTime"
+                }
+              },
+              {
+                "sink": {
+                  "name": "updated_at",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "updated_at",
+                  "physicalType": "timestamp with time zone",
+                  "type": "DateTime"
+                }
+              }
+            ],
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "dependsOn": [
+          {
+            "activity": "Lookup_Products_Window",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "inputs": [
+          {
+            "parameters": {},
+            "referenceName": "DS_PG_Query",
+            "type": "DatasetReference"
+          }
+        ],
+        "name": "Copy_Products_Incremental_To_Raw",
+        "outputs": [
+          {
+            "parameters": {
+              "tableName": "products",
+              "watermarkPath": {
+                "type": "Expression",
+                "value": "@concat('watermark=', formatDateTime(activity('Lookup_Products_Window').output.firstRow.new_watermark, 'yyyyMMddTHHmmssfffffffZ'))"
+              }
+            },
+            "referenceName": "DS_ADLS_Incremental_Raw",
+            "type": "DatasetReference"
+          }
+        ],
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "0.12:00:00"
+        },
+        "type": "Copy",
+        "typeProperties": {
+          "enableStaging": false,
+          "sink": {
+            "formatSettings": {
+              "fileExtension": ".csv",
+              "quoteAllText": true,
+              "type": "DelimitedTextWriteSettings"
+            },
+            "storeSettings": {
+              "type": "AzureBlobFSWriteSettings"
+            },
+            "type": "DelimitedTextSink"
+          },
+          "source": {
+            "partitionOption": "None",
+            "query": {
+              "type": "Expression",
+              "value": "@concat('SELECT product_id, product_name, category, brand, unit_price, created_at, updated_at FROM public.products WHERE updated_at > TIMESTAMPTZ ''' , activity('Lookup_Current_Watermarks').output.firstRow.products_watermark, ''' AND updated_at <= TIMESTAMPTZ ''' , activity('Lookup_Products_Window').output.firstRow.new_watermark, ''' ORDER BY updated_at, product_id')"
+            },
+            "queryTimeout": "02:00:00",
+            "type": "AzurePostgreSqlSource"
+          },
+          "translator": {
+            "mappings": [
+              {
+                "sink": {
+                  "name": "product_id",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "product_id",
+                  "physicalType": "bigint",
+                  "type": "Int64"
+                }
+              },
+              {
+                "sink": {
+                  "name": "product_name",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "product_name",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "category",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "category",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "brand",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "brand",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "unit_price",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "unit_price",
+                  "physicalType": "numeric",
+                  "type": "Decimal"
+                }
+              },
+              {
+                "sink": {
+                  "name": "created_at",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "created_at",
+                  "physicalType": "timestamp with time zone",
+                  "type": "DateTime"
+                }
+              },
+              {
+                "sink": {
+                  "name": "updated_at",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "updated_at",
+                  "physicalType": "timestamp with time zone",
+                  "type": "DateTime"
+                }
+              }
+            ],
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "dependsOn": [
+          {
+            "activity": "Lookup_Orders_Window",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "inputs": [
+          {
+            "parameters": {},
+            "referenceName": "DS_PG_Query",
+            "type": "DatasetReference"
+          }
+        ],
+        "name": "Copy_Orders_Incremental_To_Raw",
+        "outputs": [
+          {
+            "parameters": {
+              "tableName": "orders",
+              "watermarkPath": {
+                "type": "Expression",
+                "value": "@concat('watermark=', formatDateTime(activity('Lookup_Orders_Window').output.firstRow.new_watermark, 'yyyyMMddTHHmmssfffffffZ'))"
+              }
+            },
+            "referenceName": "DS_ADLS_Incremental_Raw",
+            "type": "DatasetReference"
+          }
+        ],
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "0.12:00:00"
+        },
+        "type": "Copy",
+        "typeProperties": {
+          "enableStaging": false,
+          "sink": {
+            "formatSettings": {
+              "fileExtension": ".csv",
+              "quoteAllText": true,
+              "type": "DelimitedTextWriteSettings"
+            },
+            "storeSettings": {
+              "type": "AzureBlobFSWriteSettings"
+            },
+            "type": "DelimitedTextSink"
+          },
+          "source": {
+            "partitionOption": "None",
+            "query": {
+              "type": "Expression",
+              "value": "@concat('SELECT order_id, customer_id, product_id, quantity, unit_price, order_status, created_at, updated_at FROM public.orders WHERE updated_at > TIMESTAMPTZ ''' , activity('Lookup_Current_Watermarks').output.firstRow.orders_watermark, ''' AND updated_at <= TIMESTAMPTZ ''' , activity('Lookup_Orders_Window').output.firstRow.new_watermark, ''' ORDER BY updated_at, order_id')"
+            },
+            "queryTimeout": "02:00:00",
+            "type": "AzurePostgreSqlSource"
+          },
+          "translator": {
+            "mappings": [
+              {
+                "sink": {
+                  "name": "order_id",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "order_id",
+                  "physicalType": "bigint",
+                  "type": "Int64"
+                }
+              },
+              {
+                "sink": {
+                  "name": "customer_id",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "customer_id",
+                  "physicalType": "bigint",
+                  "type": "Int64"
+                }
+              },
+              {
+                "sink": {
+                  "name": "product_id",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "product_id",
+                  "physicalType": "bigint",
+                  "type": "Int64"
+                }
+              },
+              {
+                "sink": {
+                  "name": "quantity",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "quantity",
+                  "physicalType": "integer",
+                  "type": "Int32"
+                }
+              },
+              {
+                "sink": {
+                  "name": "unit_price",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "unit_price",
+                  "physicalType": "numeric",
+                  "type": "Decimal"
+                }
+              },
+              {
+                "sink": {
+                  "name": "order_status",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "order_status",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "created_at",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "created_at",
+                  "physicalType": "timestamp with time zone",
+                  "type": "DateTime"
+                }
+              },
+              {
+                "sink": {
+                  "name": "updated_at",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "updated_at",
+                  "physicalType": "timestamp with time zone",
+                  "type": "DateTime"
+                }
+              }
+            ],
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "dependsOn": [
+          {
+            "activity": "Lookup_Payments_Window",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "inputs": [
+          {
+            "parameters": {},
+            "referenceName": "DS_PG_Query",
+            "type": "DatasetReference"
+          }
+        ],
+        "name": "Copy_Payments_Incremental_To_Raw",
+        "outputs": [
+          {
+            "parameters": {
+              "tableName": "payments",
+              "watermarkPath": {
+                "type": "Expression",
+                "value": "@concat('watermark=', formatDateTime(activity('Lookup_Payments_Window').output.firstRow.new_watermark, 'yyyyMMddTHHmmssfffffffZ'))"
+              }
+            },
+            "referenceName": "DS_ADLS_Incremental_Raw",
+            "type": "DatasetReference"
+          }
+        ],
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "0.12:00:00"
+        },
+        "type": "Copy",
+        "typeProperties": {
+          "enableStaging": false,
+          "sink": {
+            "formatSettings": {
+              "fileExtension": ".csv",
+              "quoteAllText": true,
+              "type": "DelimitedTextWriteSettings"
+            },
+            "storeSettings": {
+              "type": "AzureBlobFSWriteSettings"
+            },
+            "type": "DelimitedTextSink"
+          },
+          "source": {
+            "partitionOption": "None",
+            "query": {
+              "type": "Expression",
+              "value": "@concat('SELECT payment_id, order_id, payment_amount, payment_method, payment_status, payment_time, updated_at FROM public.payments WHERE updated_at > TIMESTAMPTZ ''' , activity('Lookup_Current_Watermarks').output.firstRow.payments_watermark, ''' AND updated_at <= TIMESTAMPTZ ''' , activity('Lookup_Payments_Window').output.firstRow.new_watermark, ''' ORDER BY updated_at, payment_id')"
+            },
+            "queryTimeout": "02:00:00",
+            "type": "AzurePostgreSqlSource"
+          },
+          "translator": {
+            "mappings": [
+              {
+                "sink": {
+                  "name": "payment_id",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "payment_id",
+                  "physicalType": "bigint",
+                  "type": "Int64"
+                }
+              },
+              {
+                "sink": {
+                  "name": "order_id",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "order_id",
+                  "physicalType": "bigint",
+                  "type": "Int64"
+                }
+              },
+              {
+                "sink": {
+                  "name": "payment_amount",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "payment_amount",
+                  "physicalType": "numeric",
+                  "type": "Decimal"
+                }
+              },
+              {
+                "sink": {
+                  "name": "payment_method",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "payment_method",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "payment_status",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "payment_status",
+                  "physicalType": "character varying",
+                  "type": "String"
+                }
+              },
+              {
+                "sink": {
+                  "name": "payment_time",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "payment_time",
+                  "physicalType": "timestamp with time zone",
+                  "type": "DateTime"
+                }
+              },
+              {
+                "sink": {
+                  "name": "updated_at",
+                  "physicalType": "String",
+                  "type": "String"
+                },
+                "source": {
+                  "name": "updated_at",
+                  "physicalType": "timestamp with time zone",
+                  "type": "DateTime"
+                }
+              }
+            ],
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "dependsOn": [
+          {
+            "activity": "Copy_Customers_Incremental_To_Raw",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Copy_Products_Incremental_To_Raw",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Copy_Orders_Incremental_To_Raw",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Copy_Payments_Incremental_To_Raw",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "Validate_Counts_Then_Advance_Watermarks",
+        "type": "IfCondition",
+        "typeProperties": {
+          "expression": {
+            "type": "Expression",
+            "value": "@and(and(and(equals(int(activity('Copy_Customers_Incremental_To_Raw').output.rowsCopied), int(activity('Lookup_Customers_Window').output.firstRow.expected_rows)), equals(int(activity('Copy_Products_Incremental_To_Raw').output.rowsCopied), int(activity('Lookup_Products_Window').output.firstRow.expected_rows))), equals(int(activity('Copy_Orders_Incremental_To_Raw').output.rowsCopied), int(activity('Lookup_Orders_Window').output.firstRow.expected_rows))), equals(int(activity('Copy_Payments_Incremental_To_Raw').output.rowsCopied), int(activity('Lookup_Payments_Window').output.firstRow.expected_rows)))"
+          },
+          "ifFalseActivities": [
+            {
+              "dependsOn": [],
+              "name": "Fail_Row_Count_Validation",
+              "type": "Fail",
+              "typeProperties": {
+                "errorCode": "INCREMENTAL_ROW_COUNT_MISMATCH",
+                "message": "One or more incremental source counts did not match Copy rowsCopied; watermarks were not advanced."
+              },
+              "userProperties": []
+            }
+          ],
+          "ifTrueActivities": [
+            {
+              "dependsOn": [],
+              "inputs": [
+                {
+                  "parameters": {},
+                  "referenceName": "DS_PG_Query",
+                  "type": "DatasetReference"
+                }
+              ],
+              "name": "Write_Watermark_History",
+              "outputs": [
+                {
+                  "parameters": {
+                    "fileName": {
+                      "type": "Expression",
+                      "value": "@concat(pipeline().RunId, '.csv')"
+                    },
+                    "folderPath": "_control/history"
+                  },
+                  "referenceName": "DS_ADLS_Watermark_Control",
+                  "type": "DatasetReference"
+                }
+              ],
+              "policy": {
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false,
+                "timeout": "0.12:00:00"
+              },
+              "type": "Copy",
+              "typeProperties": {
+                "enableStaging": false,
+                "sink": {
+                  "formatSettings": {
+                    "fileExtension": ".csv",
+                    "quoteAllText": true,
+                    "type": "DelimitedTextWriteSettings"
+                  },
+                  "storeSettings": {
+                    "type": "AzureBlobFSWriteSettings"
+                  },
+                  "type": "DelimitedTextSink"
+                },
+                "source": {
+                  "partitionOption": "None",
+                  "query": {
+                    "type": "Expression",
+                    "value": "@concat('SELECT TIMESTAMPTZ ''' , activity('Lookup_Customers_Window').output.firstRow.new_watermark, '''::text AS customers_watermark, TIMESTAMPTZ ''' , activity('Lookup_Products_Window').output.firstRow.new_watermark, '''::text AS products_watermark, TIMESTAMPTZ ''' , activity('Lookup_Orders_Window').output.firstRow.new_watermark, '''::text AS orders_watermark, TIMESTAMPTZ ''' , activity('Lookup_Payments_Window').output.firstRow.new_watermark, '''::text AS payments_watermark, ''' , pipeline().RunId, '''::text AS last_successful_run_id, clock_timestamp()::text AS completed_at')"
+                  },
+                  "queryTimeout": "00:10:00",
+                  "type": "AzurePostgreSqlSource"
+                }
+              },
+              "userProperties": []
+            },
+            {
+              "dependsOn": [
+                {
+                  "activity": "Write_Watermark_History",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ],
+              "inputs": [
+                {
+                  "parameters": {},
+                  "referenceName": "DS_PG_Query",
+                  "type": "DatasetReference"
+                }
+              ],
+              "name": "Advance_Current_Watermarks",
+              "outputs": [
+                {
+                  "parameters": {
+                    "fileName": "watermarks.csv",
+                    "folderPath": "_control"
+                  },
+                  "referenceName": "DS_ADLS_Watermark_Control",
+                  "type": "DatasetReference"
+                }
+              ],
+              "policy": {
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false,
+                "timeout": "0.12:00:00"
+              },
+              "type": "Copy",
+              "typeProperties": {
+                "enableStaging": false,
+                "sink": {
+                  "formatSettings": {
+                    "fileExtension": ".csv",
+                    "quoteAllText": true,
+                    "type": "DelimitedTextWriteSettings"
+                  },
+                  "storeSettings": {
+                    "type": "AzureBlobFSWriteSettings"
+                  },
+                  "type": "DelimitedTextSink"
+                },
+                "source": {
+                  "partitionOption": "None",
+                  "query": {
+                    "type": "Expression",
+                    "value": "@concat('SELECT TIMESTAMPTZ ''' , activity('Lookup_Customers_Window').output.firstRow.new_watermark, '''::text AS customers_watermark, TIMESTAMPTZ ''' , activity('Lookup_Products_Window').output.firstRow.new_watermark, '''::text AS products_watermark, TIMESTAMPTZ ''' , activity('Lookup_Orders_Window').output.firstRow.new_watermark, '''::text AS orders_watermark, TIMESTAMPTZ ''' , activity('Lookup_Payments_Window').output.firstRow.new_watermark, '''::text AS payments_watermark, ''' , pipeline().RunId, '''::text AS last_successful_run_id, clock_timestamp()::text AS completed_at')"
+                  },
+                  "queryTimeout": "00:10:00",
+                  "type": "AzurePostgreSqlSource"
+                }
+              },
+              "userProperties": []
+            }
+          ]
+        },
+        "userProperties": []
+      }
+    ],
+    "annotations": [],
+    "lastPublishTime": "2026-08-14T18:47:14Z"
+  },
+  "type": "Microsoft.DataFactory/factories/pipelines"
+}

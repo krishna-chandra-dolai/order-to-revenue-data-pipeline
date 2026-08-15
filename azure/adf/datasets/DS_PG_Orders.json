@@ -1,0 +1,65 @@
+{
+  "name": "DS_PG_Orders",
+  "properties": {
+    "linkedServiceName": {
+      "referenceName": "LS_AzurePostgreSQL_OrderRevenue",
+      "type": "LinkedServiceReference"
+    },
+    "annotations": [],
+    "type": "AzurePostgreSqlTable",
+    "schema": [
+      {
+        "name": "order_id",
+        "type": "bigint",
+        "precision": 0,
+        "scale": 0
+      },
+      {
+        "name": "customer_id",
+        "type": "bigint",
+        "precision": 0,
+        "scale": 0
+      },
+      {
+        "name": "product_id",
+        "type": "bigint",
+        "precision": 0,
+        "scale": 0
+      },
+      {
+        "name": "quantity",
+        "type": "integer",
+        "precision": 0,
+        "scale": 0
+      },
+      {
+        "name": "unit_price",
+        "type": "numeric",
+        "precision": 12,
+        "scale": 2
+      },
+      {
+        "name": "order_status",
+        "type": "character varying",
+        "precision": 0,
+        "scale": 0
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "precision": 0,
+        "scale": 0
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "precision": 0,
+        "scale": 0
+      }
+    ],
+    "typeProperties": {
+      "schema": "public",
+      "table": "orders"
+    }
+  }
+}
