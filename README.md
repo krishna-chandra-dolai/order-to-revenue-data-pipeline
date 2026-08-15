@@ -1,147 +1,118 @@
 # Order-to-Revenue Data Pipeline
 
-An Azure data engineering portfolio project that moves synthetic e-commerce
-data from Azure Database for PostgreSQL through Azure Data Factory (ADF) into
-Azure Data Lake Storage Gen2 (ADLS), separates valid records from explainable
-rejects, and reconciles order-to-revenue analytics. The implemented full and
-incremental pipelines were executed successfully; the evidence set is current
-through 2026-08-15.
+Production-style Azure data engineering pipeline that ingests order-to-revenue data from Azure PostgreSQL through Azure Data Factory into ADLS Gen2, with full and incremental loading, independent watermarks, data-quality routing, reconciliation, analytics, and verified idempotent reruns.
 
-## Business problem
+![Azure Data Factory](https://img.shields.io/badge/Azure-Data%20Factory-0078D4)
+![ADLS Gen2](https://img.shields.io/badge/Azure-ADLS%20Gen2-0078D4)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-4169E1)
+![Python](https://img.shields.io/badge/Python-3.11-3776AB)
+![Tests](https://img.shields.io/badge/tests-7%2F7%20passing-2EA44F)
 
-Order, customer, product, and payment data must arrive in an analytical layer
-without silent loss. The pipeline supports an initial load, bounded incremental
-loads, explicit rejection reasons, count reconciliation, and a confirmed-
-revenue rule that requires a completed order, valid relationships, a successful
-latest payment, and an exact payment-to-order amount match.
+The full and incremental pipelines were executed successfully in Azure and the implementation was validated against real pipeline runs, ADLS outputs, reconciliation checks, and an idempotent rerun test. Evidence is current through 2026-08-15.
 
 ## Architecture
 
 ```mermaid
 flowchart LR
     PG["Azure PostgreSQL<br/>customers · products · orders · payments"]
-    ADF["Azure Data Factory<br/>full + incremental pipelines"]
-    RAW["ADLS Gen2 Raw<br/>full extracts · incremental batches · control"]
-    VT["Python validation / transformation"]
-    CUR["ADLS Curated<br/>valid latest records"]
-    REJ["ADLS Rejected<br/>source row + reason"]
-    SQL["SQL analytics<br/>PostgreSQL read-only queries"]
-    WM["Watermark control<br/>old watermark + fixed upper bound"]
-    GUARD["Count guard<br/>expected rows = rows copied"]
+    ADF["Azure Data Factory<br/>full + incremental orchestration"]
+    RAW["ADLS Gen2<br/>Raw"]
+    VT["Validation / Transformation<br/>Python"]
+    CUR["ADLS Gen2<br/>Curated"]
+    REJ["ADLS Gen2<br/>Rejected"]
+    SQL["SQL Analytics<br/>revenue · customer · product"]
+    WM["Per-table updated_at watermark<br/>fixed extraction boundary"]
+    CHECK["Count validation<br/>and reconciliation"]
 
     PG --> ADF --> RAW --> VT
-    VT --> CUR
+    VT --> CUR --> SQL
     VT --> REJ
-    PG --> SQL
-    CUR -. "validated analytical layer" .-> SQL
     WM --> ADF
-    ADF --> GUARD -->|all tables pass| WM
+    ADF --> CHECK
+    CHECK -->|success only| WM
 ```
 
-The included SQL analytics execute against PostgreSQL; curated ADLS output is
-the validated analytical layer and is not queried through a separately
-provisioned engine. Synapse, Databricks, Fabric, VMs, and ADF mapping-data-flow
-compute are intentionally outside the implemented scope.
+Incremental control is deliberately bounded: each table reads its prior `updated_at` watermark, captures a fixed upper boundary, extracts `(old_watermark, new_watermark]`, validates copied counts, and advances control state only after every table succeeds.
 
-## Technology stack
+## Business Problem
+
+Customer, product, order, and payment data must reach an analytical layer without silent loss or double processing. This project implements an initial load, independent per-table incremental loads, explainable rejection routing, end-to-end count reconciliation, and a confirmed-revenue rule that requires a completed order, valid relationships, a successful latest payment, and an exact payment-to-order amount match.
+
+## Technology Stack
 
 | Area | Implementation |
 |---|---|
 | Source | Azure Database for PostgreSQL Flexible Server 17 |
-| Orchestration | Azure Data Factory Lookup, Copy, If, and Fail activities |
-| Data lake | ADLS Gen2 with `raw`, `curated`, and `rejected` containers |
+| Orchestration | Azure Data Factory Lookup, Copy, If Condition, and Fail activities |
+| Data lake | ADLS Gen2 `raw`, `curated`, and `rejected` containers |
 | Processing | Python 3.11 standard library |
 | Analytics | Read-only PostgreSQL SQL |
-| Validation | `unittest`, JSON definition checks, count and hash reconciliation |
-| Operations | Azure CLI and Azure RBAC; PostgreSQL `psql` over TLS |
+| Validation | `unittest`, JSON definition checks, count reconciliation, and SHA-256 proof |
+| Operations | Azure CLI, Azure RBAC, and PostgreSQL `psql` over TLS |
 
-## End-to-end data flow
+## Data Flow
 
-1. Deterministic synthetic rows model customers, products, orders, payments,
-   and controlled quality scenarios.
-2. `PL_Initial_Full_Load` copies all four PostgreSQL tables to ADLS raw CSVs.
-3. `PL_Incremental_Load` reads the current watermarks, captures fixed source
-   upper bounds, and copies only rows in `(old_watermark, new_watermark]`.
-4. Python validates types, constraints, relationships, versions, and payment
-   reconciliation, then writes every raw row to curated or rejected output.
-5. SQL reports revenue, customer/product performance, status trends, and
-   outstanding orders using the same confirmed-revenue rules.
+1. Deterministic synthetic data models customers, products, orders, payments, and controlled quality scenarios.
+2. `PL_Initial_Full_Load` copies all four source tables to the ADLS raw layer.
+3. `PL_Incremental_Load` extracts bounded changes using independent table watermarks.
+4. Python validates types, constraints, relationships, record versions, and payment reconciliation.
+5. Every raw row is retained in either curated or rejected output with an explainable disposition.
+6. SQL reports confirmed revenue, customer and product performance, status trends, and outstanding orders.
 
 ## Azure Data Factory Pipelines
 
-The implementation uses two primary ADF pipelines: `PL_Initial_Full_Load` for
-the baseline extraction and `PL_Incremental_Load` for repeatable changed-data
-processing.
-
 ### Initial Full Load
 
-![Azure Data Factory Initial Full Load Pipeline](docs/images/adf/adf-full-load-pipeline.png)
+[![Azure Data Factory initial full-load pipeline](docs/images/adf/adf-full-load-pipeline.png)](docs/images/adf/adf-full-load-pipeline.png)
 
-The initial pipeline loads customers, products, orders, and payments from Azure
-PostgreSQL into the ADLS raw layer. Per-table source lookups and copied-row
-counts feed a reconciliation guard before initial watermarks are written.
+`PL_Initial_Full_Load` loads customers, products, orders, and payments from Azure PostgreSQL into ADLS raw. Per-table source lookups and ADF `rowsCopied` values feed a reconciliation guard; initial watermarks are written only after every count matches.
 
 ### Incremental Load
 
-![Azure Data Factory Incremental Load Pipeline](docs/images/adf/adf-incremental-load-pipeline.png)
+[![Azure Data Factory incremental-load pipeline](docs/images/adf/adf-incremental-load-pipeline.png)](docs/images/adf/adf-incremental-load-pipeline.png)
 
-The incremental pipeline maintains an independent `updated_at` watermark for
-each table, captures a fixed upper bound, and runs bounded per-table Lookup and
-Copy activities. Watermarks advance only after every copied count validates,
-and unique `run_id` sink paths prevent reruns from overwriting earlier batches.
+`PL_Incremental_Load` uses independent `updated_at` watermarks, fixed upper bounds, and per-table Copy activities. Counts must validate before watermarks advance, while a unique pipeline `run_id` in each sink path prevents reruns from overwriting earlier extracts.
 
-## Full-load architecture
+## Execution Evidence
 
-The full-load pipeline copies the four source tables in parallel, performs a
-source-count lookup for each, and compares those counts with ADF `rowsCopied`.
-Initial watermarks are written only inside the successful count branch. A
-mismatch follows a native Fail activity, so control state is never initialized
-from an incomplete load.
+| Successful full-load execution flow | Successful pipeline runs |
+|---|---|
+| [![Successful ADF full-load execution flow](docs/images/adf/architecture-pipeline-overview.png)](docs/images/adf/architecture-pipeline-overview.png) | [![Successful Azure Data Factory pipeline runs](docs/images/adf/adf-successful-pipeline-runs.png)](docs/images/adf/adf-successful-pipeline-runs.png) |
 
-## Incremental-load and watermark strategy
+### Full-load activity validation
 
-All four tables use the indexed, non-null `updated_at` column plus the table
-primary key. Each run reads the previous watermark and captures a fixed upper
-boundary, producing a deterministic half-open window:
+[![Successful ADF full-load activity validation](docs/images/adf/adf-full-load-activity-validation.png)](docs/images/adf/adf-full-load-activity-validation.png)
 
-```text
-previous watermark < updated_at <= captured upper watermark
-```
+The Monitor evidence shows successful Copy, Lookup, validation, and initial-watermark activities. Detailed run IDs, counts, and validation records remain in [Azure execution results](docs/results/AZURE_EXECUTION_RESULTS.md) and [validation results](docs/results/VALIDATION_RESULTS.md).
 
-ADF stores each output under a watermark and unique pipeline run ID:
+## ADLS Gen2 Data Lake Design
 
-```text
-raw/<table>/incremental/watermark=<UTC>/run_id=<RunId>/<table>.csv
-```
+[![ADLS Gen2 raw, curated, rejected, and log containers](docs/images/adls/adls-data-lake-layers.png)](docs/images/adls/adls-data-lake-layers.png)
 
-The pipeline advances the current watermark only after all four bounded source
-counts equal their copied row counts. It also writes append-only watermark
-history. Failed retries therefore reuse the same lower boundary, while the
-transformation layer resolves repeated primary keys by latest `updated_at`.
+- **Raw:** immutable full extracts, run-versioned incremental batches, and watermark control records.
+- **Curated:** valid current records with unique primary keys.
+- **Rejected:** original source fields plus a stable `rejection_reason`; superseded versions remain visible as `SUPERSEDED_BY_LATER_VERSION`.
+- **Incremental versioning:** separates the logical watermark window from the physical pipeline attempt.
 
-## Raw, curated, and rejected layers
+| Raw layer | Incremental `run_id` versioning |
+|---|---|
+| [![ADLS raw layer folders for project tables and control data](docs/images/adls/adls-raw-layer.png)](docs/images/adls/adls-raw-layer.png) | [![ADLS incremental path containing watermark and unique run ID](docs/images/adls/adls-incremental-run-id-path.png)](docs/images/adls/adls-incremental-run-id-path.png) |
 
-- `raw`: immutable full extracts, run-versioned incremental files, and control
-  records.
-- `curated`: valid current records with unique primary keys.
-- `rejected`: original fields plus a stable `rejection_reason`; superseded
-  versions remain visible as `SUPERSEDED_BY_LATER_VERSION`.
+| Curated layer | Rejected layer |
+|---|---|
+| [![ADLS curated layer table folders](docs/images/adls/adls-curated-layer.png)](docs/images/adls/adls-curated-layer.png) | [![ADLS rejected layer table folders](docs/images/adls/adls-rejected-layer.png)](docs/images/adls/adls-rejected-layer.png) |
 
-Structurally valid failed, pending, and refunded payments remain curated but do
-not contribute to confirmed revenue. No bad record is silently discarded.
+## Data Quality and Reconciliation
 
-## Data-quality checks and reconciliation
+Checks cover required fields, type parsing, allowed statuses and methods, positive values, timestamp ordering, duplicate versions, primary-key uniqueness, customer/product/order relationships, quantity, and successful-payment amount matching. No invalid record is silently discarded.
 
-Checks cover required fields, type parsing, allowed statuses/methods, positive
-values, timestamp ordering, duplicate versions, primary-key uniqueness,
-customer/product/order relationships, quantity, and successful-payment amount
-matching. The core reconciliation invariant is:
+The core invariant is:
 
 ```text
 raw rows = curated rows + rejected rows
 ```
 
-The deterministic baseline produced these verified results:
+Verified deterministic baseline:
 
 | Table | Raw | Curated | Rejected |
 |---|---:|---:|---:|
@@ -150,32 +121,64 @@ The deterministic baseline produced these verified results:
 | orders | 10,000 | 9,953 | 47 |
 | payments | 9,990 | 9,943 | 47 |
 
-The retained controlled incremental test left PostgreSQL at 2,001 customers,
-301 products, 10,001 orders, and 9,991 payments. Detailed boundaries and proof
-are in [validation results](docs/results/VALIDATION_RESULTS.md) and the
-[controlled incremental results](docs/results/CONTROLLED_INCREMENTAL_TEST_RESULTS.md).
+Final PostgreSQL counts after the controlled incremental test were 2,001 customers, 301 products, 10,001 orders, and 9,991 payments. The verified analytical result was 8,941 confirmed orders and `307,416,040.00` in confirmed revenue.
+
+## Incremental Loading Strategy
+
+Each table uses its indexed, non-null `updated_at` column plus its primary key. A run reads the prior watermark and captures a fixed source upper bound, producing the deterministic window:
+
+```text
+previous watermark < updated_at <= captured upper watermark
+```
+
+The pipeline advances the current watermark only when bounded source counts equal copied-row counts for all four tables. Append-only watermark history supports auditability, while the transformation layer resolves repeated primary keys using the latest `updated_at`.
+
+## Reliability Lesson: Idempotent Incremental Loads
+
+Controlled testing exposed a real storage defect. The original sink path reused the same location when a zero-change rerun retained its watermark:
+
+```text
+<table>/incremental/watermark=<timestamp>/<table>.csv
+```
+
+That rerun could overwrite the earlier non-zero extract. The corrected path makes every physical attempt unique:
+
+```text
+<table>/incremental/watermark=<timestamp>/run_id=<pipeline-run-id>/<table>.csv
+```
+
+After remediation, the first controlled run copied exactly one customer, product, order, and payment; an immediate rerun copied zero rows for every table. The first-run files remained unchanged, SHA-256 verification passed, and both watermark idempotency and append-only retention passed. See the [controlled incremental test results](docs/results/CONTROLLED_INCREMENTAL_TEST_RESULTS.md) for the full proof.
 
 ## Analytics
 
-[Order-to-revenue analytics](database/analytics/07_analytics_queries.sql)
-includes confirmed order count, total and daily revenue, average order value,
-product/category ranking, customer/location performance, order and latest-
-payment status analysis, and outstanding orders. On the verified live source,
-8,941 orders met the confirmed-revenue rule for `307,416,040.00` in revenue.
+[Order-to-revenue analytics](database/analytics/07_analytics_queries.sql) includes confirmed order count, total and daily revenue, average order value, product and category ranking, customer and location performance, order and latest-payment status analysis, and outstanding orders. The SQL executes read-only against PostgreSQL; no unimplemented lake query engine is claimed.
 
-## Major debugging lesson: run-ID sink-path remediation
+## Testing
 
-A controlled rerun correctly extracted zero source rows but exposed a storage
-design defect: a path based only on the watermark allowed a zero-row rerun to
-overwrite the prior non-zero batch. The fix added
-`run_id=<pipeline().RunId>` to all four incremental sink paths.
+The standard-library suite verifies deterministic lake reconciliation, latest-version deduplication, valid JSON, linked-service and dataset references, full-load count guarding, watermark advancement placement, and unique incremental run paths. ADF definitions are regenerated during the suite so committed JSON cannot drift silently from the builder.
 
-Two controlled retests then proved the remediation: the first copied exactly
-one row per table, the second copied zero, both wrote separate paths, and hashes
-confirmed that the first run's files remained unchanged. This was a sink-path
-idempotency issue, not a watermark-query failure.
+Verified release state:
 
-## Repository structure
+- regression/static tests: **7/7 PASS**
+- ADF definition validation: **PASS**
+- source idempotency: **PASS**
+- watermark idempotency: **PASS**
+- append-only retention: **PASS**
+- duplicate processing: **none**
+- secret scan: **PASS**
+
+## Security
+
+- `.env`, credential files, dumps, logs, caches, local work, and generated data are excluded from Git.
+- `.env.example` contains placeholders only; the repository stores no linked-service credentials, PostgreSQL passwords, storage keys, SAS tokens, or credentialed connection strings.
+- Database connectivity requires TLS, and runtime authentication remains outside source control.
+- ADF definitions, evidence files, and screenshots are reviewed for public-safe publication.
+
+## Cost-Conscious Azure Decisions
+
+The implementation uses one burstable PostgreSQL server, one Standard LRS ADLS Gen2 account, and one ADF instance. Low-volume Lookup, Copy, and control activities plus local Python processing avoid an additional analytics engine, Spark cluster, dedicated integration runtime, high availability, geo-redundancy, or premium tier.
+
+## Repository Structure
 
 ```text
 azure/
@@ -195,10 +198,9 @@ docs/                     Architecture, images, interview, operations, results, 
 data/generated/           Ignored reproducible local data
 ```
 
-## How to run and reproduce locally
+## Running and Reproducing Locally
 
-Prerequisites are Python 3.11+, with `psql` and Azure CLI needed only for their
-respective database/Azure operations. No pip packages are required.
+Prerequisites are Python 3.11+. `psql` and Azure CLI are needed only for their respective database and Azure operations; no pip packages are required.
 
 ```powershell
 python -m scripts.ingestion.generate_data
@@ -208,7 +210,7 @@ python -m unittest discover -s tests -v
 python -m scripts.deployment.build_adf_definitions
 ```
 
-To exercise the local lake transformation without touching Azure:
+To exercise the lake transformation without touching Azure:
 
 ```powershell
 python -m scripts.transformation.process_raw_to_curated `
@@ -223,54 +225,24 @@ python -m scripts.validation.validate_lake_outputs `
   --rejected-dir work/local-lake/rejected
 ```
 
-Do not run `scripts.ingestion.load_to_postgres` against the completed Azure
-database: it contains an intentional local-development truncate and reload.
-Azure deployment and pipeline-run helpers are never invoked by tests or by the
-definition builder.
+Do not run `scripts.ingestion.load_to_postgres` against the completed Azure database: it contains an intentional local-development truncate and reload. Azure deployment and pipeline-run helpers are never invoked by tests or by the definition builder.
 
-## Testing
+## Production Improvements
 
-The standard-library suite verifies deterministic lake reconciliation,
-latest-version deduplication, valid JSON, linked-service/dataset references,
-full-load count guarding, watermark advancement placement, and unique
-incremental run paths. ADF definitions are regenerated during the suite so
-committed JSON cannot drift silently from the builder.
+- Replace timestamp-only change detection with CDC or log-based replication to cover late commits carrying older `updated_at` values.
+- Bootstrap the full load from a consistent database snapshot.
+- Add scheduling, alerting, centralized observability, schema-drift handling, automated retention, and private networking.
+- Use managed-identity database authentication and a governed analytical serving layer where production scale requires them.
 
-## Security
+## Documentation
 
-- `.env`, credential files, dumps, logs, caches, local work, and generated data
-  are excluded from Git.
-- The repository stores no linked-service credentials, PostgreSQL passwords,
-  storage keys, SAS tokens, or connection strings containing credentials.
-- Database access uses TLS and external `psql` authentication; ADLS inspection
-  uses Azure RBAC rather than account keys.
-- Evidence and documentation images must be sanitized before commit.
-
-## Cost-conscious Azure decisions
-
-The project reuses one burstable PostgreSQL server, one Standard LRS ADLS Gen2
-account, and one ADF instance. It uses low-volume Lookup/Copy/control activities
-and Python rather than provisioning an additional analytics engine, Spark
-cluster, dedicated integration runtime, HA, geo-redundancy, or premium tier.
-
-## Limitations and production improvements
-
-- A timestamp watermark can miss a late commit carrying an older `updated_at`;
-  production CDC or log-based replication would close that gap.
-- The initial full load assumes a quiet synthetic source; production should use
-  a consistent database snapshot or CDC bootstrap.
-- Scheduling, alerting, centralized observability, schema-drift handling,
-  automated retention, private endpoints, and managed-identity database auth
-  are not implemented.
-- The included SQL runs on PostgreSQL. A larger production platform could serve
-  curated lake data through an appropriately governed analytical engine.
-
-## Detailed documentation
-
-- [Architecture](docs/architecture/architecture.md) and
-  [data model](docs/architecture/data_model.md)
+- [Architecture](docs/architecture/architecture.md) and [data model](docs/architecture/data_model.md)
 - [Azure execution results](docs/results/AZURE_EXECUTION_RESULTS.md)
 - [Validation results](docs/results/VALIDATION_RESULTS.md)
-- [Interview guide](docs/interview/INTERVIEW_GUIDE.md) and
-  [safe live demo](docs/interview/LIVE_DEMO_GUIDE.md)
+- [Controlled incremental test results](docs/results/CONTROLLED_INCREMENTAL_TEST_RESULTS.md)
+- [Interview guide](docs/interview/INTERVIEW_GUIDE.md) and [safe live demo](docs/interview/LIVE_DEMO_GUIDE.md)
 - [ADF definition notes](azure/adf/README.md)
+
+## License
+
+Licensed under the [MIT License](LICENSE).
