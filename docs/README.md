@@ -1,6 +1,7 @@
 # Project documentation
 
 - `architecture/`: system architecture and source data model.
+- `images/`: verified screenshots organized by Azure component or validation purpose.
 - `interview/`: recruiter/interviewer narrative and safe live-demo sequence.
 - `operations/`: controlled test proposal and operational context.
 - `results/`: verified Azure execution, validation, and remediation results.

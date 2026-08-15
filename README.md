@@ -67,6 +67,29 @@ compute are intentionally outside the implemented scope.
 5. SQL reports revenue, customer/product performance, status trends, and
    outstanding orders using the same confirmed-revenue rules.
 
+## Azure Data Factory Pipelines
+
+The implementation uses two primary ADF pipelines: `PL_Initial_Full_Load` for
+the baseline extraction and `PL_Incremental_Load` for repeatable changed-data
+processing.
+
+### Initial Full Load
+
+![Azure Data Factory Initial Full Load Pipeline](docs/images/adf/adf-full-load-pipeline.png)
+
+The initial pipeline loads customers, products, orders, and payments from Azure
+PostgreSQL into the ADLS raw layer. Per-table source lookups and copied-row
+counts feed a reconciliation guard before initial watermarks are written.
+
+### Incremental Load
+
+![Azure Data Factory Incremental Load Pipeline](docs/images/adf/adf-incremental-load-pipeline.png)
+
+The incremental pipeline maintains an independent `updated_at` watermark for
+each table, captures a fixed upper bound, and runs bounded per-table Lookup and
+Copy activities. Watermarks advance only after every copied count validates,
+and unique `run_id` sink paths prevent reruns from overwriting earlier batches.
+
 ## Full-load architecture
 
 The full-load pipeline copies the four source tables in parallel, performs a
@@ -168,9 +191,8 @@ scripts/
   validation/             Reconciliation and evidence checks
   deployment/             ADF generation and explicit Azure operations
 tests/                    Unit and ADF definition tests
-docs/                     Architecture, interview, operations, results, evidence
+docs/                     Architecture, images, interview, operations, results, evidence
 data/generated/           Ignored reproducible local data
-screenshots/              Sanitized screenshot policy
 ```
 
 ## How to run and reproduce locally
@@ -222,7 +244,7 @@ committed JSON cannot drift silently from the builder.
   storage keys, SAS tokens, or connection strings containing credentials.
 - Database access uses TLS and external `psql` authentication; ADLS inspection
   uses Azure RBAC rather than account keys.
-- Evidence and screenshots must be sanitized before commit.
+- Evidence and documentation images must be sanitized before commit.
 
 ## Cost-conscious Azure decisions
 
@@ -252,4 +274,3 @@ cluster, dedicated integration runtime, HA, geo-redundancy, or premium tier.
 - [Interview guide](docs/interview/INTERVIEW_GUIDE.md) and
   [safe live demo](docs/interview/LIVE_DEMO_GUIDE.md)
 - [ADF definition notes](azure/adf/README.md)
-
