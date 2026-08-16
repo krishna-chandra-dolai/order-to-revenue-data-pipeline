@@ -153,6 +153,18 @@ After remediation, the first controlled run copied exactly one customer, product
 
 [Order-to-revenue analytics](database/analytics/07_analytics_queries.sql) includes confirmed order count, total and daily revenue, average order value, product and category ranking, customer and location performance, order and latest-payment status analysis, and outstanding orders. The SQL executes read-only against PostgreSQL; no unimplemented lake query engine is claimed.
 
+### Verified Revenue Output
+
+After the pipeline and data-quality workflow, the [verified revenue SQL](database/analytics/07_analytics_queries.sql) was executed read-only against Azure PostgreSQL and produced the final business KPIs below. This is backend SQL output evidence; the project does not claim a Power BI or dashboard implementation.
+
+[![Verified Azure PostgreSQL order-to-revenue SQL output](docs/images/analytics/azure-postgresql-revenue-output.png)](docs/images/analytics/azure-postgresql-revenue-output.png)
+
+| Metric | Result |
+|---|---:|
+| Confirmed Orders | 8,941 |
+| Confirmed Revenue | 307,416,040.00 |
+| Average Confirmed Order Value | 34,382.74 |
+
 ## Testing
 
 The standard-library suite verifies deterministic lake reconciliation, latest-version deduplication, valid JSON, linked-service and dataset references, full-load count guarding, watermark advancement placement, and unique incremental run paths. ADF definitions are regenerated during the suite so committed JSON cannot drift silently from the builder.
